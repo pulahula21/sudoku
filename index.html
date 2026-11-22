@@ -246,6 +246,17 @@ var m=document.querySelector('meta[name="theme-color"]');if(m)m.setAttribute('co
   :root:not([data-theme="light"]) body.mj .tile .cn{color:#8e2b3a}
   :root:not([data-theme="light"]) body.mj .tile.s3 .cn{color:#2e6b48}
   /* score toast */
+  #updBar{position:fixed;left:50%;transform:translateX(-50%);bottom:calc(14px + env(safe-area-inset-bottom,0px));z-index:90;
+    width:min(calc(100vw - 24px),460px);display:flex;align-items:center;gap:12px;padding:12px 14px;border-radius:16px;
+    background:var(--card);border:1px solid var(--line-strong);color:var(--text);box-shadow:var(--card-shadow);animation:updIn .3s ease}
+  @keyframes updIn{from{transform:translate(-50%,20px);opacity:0}}
+  .upd-txt{flex:1;min-width:0;display:flex;flex-direction:column;gap:2px;font-size:13px;line-height:1.35}
+  .upd-txt span{color:var(--muted);font-size:12px}
+  .upd-btns{display:flex;gap:6px;flex:none}
+  .upd-btns .btn{height:40px;padding:0 14px;font-size:14px}
+  .trk-ver{margin:14px 0 0;text-align:center;font-size:12px;color:var(--muted)}
+  #updCheck{background:none;border:none;padding:0;font:inherit;color:var(--accent);text-decoration:underline;cursor:pointer}
+  #verTag{cursor:pointer}
   #toast{position:fixed;left:50%;top:16%;transform:translate(-50%,-8px);z-index:80;pointer-events:none;opacity:0;transition:opacity .25s,transform .25s;
     background:var(--card);border:1px solid var(--line-strong);color:var(--text);padding:9px 18px;border-radius:999px;font-weight:800;font-size:16px;box-shadow:var(--card-shadow);white-space:nowrap}
   #toast.show{opacity:1;transform:translate(-50%,0)}
@@ -602,7 +613,7 @@ var m=document.querySelector('meta[name="theme-color"]');if(m)m.setAttribute('co
 
 <div class="app">
   <header>
-    <h1>SUDOKU<span id="verTag" class="ver">v30</span></h1>
+    <h1>SUDOKU<span id="verTag" class="ver">v31</span></h1>
     <div class="hdr-btns">
       <button id="themeBtn" class="icon-btn" title="Toggle light/dark">
         <svg class="sun" viewBox="0 0 24 24" width="24" height="24" fill="none" aria-hidden="true">
@@ -722,11 +733,16 @@ var m=document.querySelector('meta[name="theme-color"]');if(m)m.setAttribute('co
     <table id="statsTable"></table>
     <div class="recent-head"><p class="recent-title" id="recentTitle">Recent Games</p><span id="recentLegend"></span></div>
     <div id="recentList"></div>
+    <p class="trk-ver"><span id="trkVer"></span> &middot; <button id="updCheck" type="button">Check for updates</button></p>
   </div>
 </div>
 
 <canvas id="confetti"></canvas>
 <div id="toast"></div>
+<div id="updBar" class="hidden" role="status">
+  <div class="upd-txt"><b id="updMsg">A new version is ready.</b><span>Updating restarts the current puzzle. Dungeon runs are kept.</span></div>
+  <div class="upd-btns"><button class="btn" id="updLater" type="button">Later</button><button class="btn primary" id="updNow" type="button">Update</button></div>
+</div>
 <div id="dgShop" class="overlay hidden">
   <div class="card dg-card">
     <h2 id="dgShopTitle">Floor cleared</h2>
@@ -843,7 +859,7 @@ var m=document.querySelector('meta[name="theme-color"]');if(m)m.setAttribute('co
 'use strict';
 window.__sudokuBoot=true;
 var bm=document.getElementById('bootMsg');if(bm)bm.style.display='none';
-var vt=document.getElementById('verTag');if(vt)vt.textContent='v30';
+var vt=document.getElementById('verTag');if(vt)vt.textContent='v31';
 
 function $(s){return document.querySelector(s);}
 function cap(s){return s.charAt(0).toUpperCase()+s.slice(1);}
@@ -2244,6 +2260,59 @@ document.addEventListener('keydown',function(e){
 });
 
 bootGame();
+
+/* ---------- update check (installed web app) ----------
+   Reads the version tag from the copy on the server and offers to switch to it. */
+var APP_VER=parseInt(($('#verTag').textContent||'v0').replace(/\D/g,''),10)||0,updBusy=false,updText=null,updLast=0,updSnooze=0;
+$('#trkVer').textContent='Version v'+APP_VER;
+function canUpdate(){return /^https?:$/.test(location.protocol);}
+function checkUpdate(manual){
+  if(!canUpdate()){if(manual)toast('Updates work in the installed app',0);return;}
+  if(updBusy)return;
+  if(navigator.onLine===false){if(manual)toast("You're offline. Try again later",0);return;}
+  updBusy=true;updLast=Date.now();
+  if(manual)toast('Checking for updates\u2026',0);
+  fetch('index.html?fresh='+Date.now(),{cache:'no-store'}).then(function(r){if(!r.ok)throw new Error(r.status);return r.text();}).then(function(t){
+    updBusy=false;
+    var m=t.match(/id="verTag" class="ver">v(\d+)</),v=m?parseInt(m[1],10):0;
+    if(v>APP_VER){updText=t;if(manual||v!==updSnooze)showUpdate(v);}
+    else if(manual)toast("You're on the latest version (v"+APP_VER+')',0);
+  }).catch(function(){updBusy=false;if(manual)toast("Couldn't reach the update server",0);});
+}
+function showUpdate(v){
+  $('#trackerOverlay').classList.add('hidden');$('#toast').classList.remove('show');
+  $('#updMsg').textContent='Sudoku v'+v+' is ready.';
+  $('#updBar').setAttribute('data-v',v);
+  $('#updBar').classList.remove('hidden');
+}
+function applyUpdate(){
+  if(dgMode&&dg)saveRun();
+  var t=updText,go=function(){location.reload();};
+  $('#updNow').disabled=true;$('#updMsg').textContent='Updating\u2026';
+  if(!t||!('caches' in window)){go();return;}
+  /* put the new page where the offline cache serves it from, then reload */
+  caches.keys().then(function(keys){
+    return Promise.all(keys.filter(function(k){return k.indexOf('sudoku-')===0;}).map(function(k){
+      return caches.open(k).then(function(c){
+        var res=function(){return new Response(t,{headers:{'Content-Type':'text/html; charset=utf-8'}});};
+        return Promise.all([c.put('index.html',res()),c.put('./',res())]);
+      });
+    }));
+  }).then(function(){
+    if(navigator.serviceWorker)return navigator.serviceWorker.getRegistration().then(function(r){if(r)return r.update();});
+  }).then(go,go);
+}
+$('#updNow').addEventListener('click',applyUpdate);
+$('#updLater').addEventListener('click',function(){updSnooze=+$('#updBar').getAttribute('data-v');$('#updBar').classList.add('hidden');});
+$('#updCheck').addEventListener('click',function(){checkUpdate(true);});
+$('#verTag').addEventListener('click',function(){checkUpdate(true);});
+$('#verTag').setAttribute('title','Check for updates');
+if(canUpdate()){
+  setTimeout(function(){checkUpdate(false);},4000); /* quietly on launch */
+  document.addEventListener('visibilitychange',function(){ /* and when you come back to the app, at most hourly */
+    if(!document.hidden&&Date.now()-updLast>3600000)checkUpdate(false);
+  });
+}
 })();
 </script>
 <script>

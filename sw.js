@@ -1,8 +1,7 @@
 /* Sudoku service worker: keeps the game playable offline.
    Pages load from the cache instantly; when online, a fresh copy is fetched in the
-   background, so a new version you upload shows up the next time the app opens.
-   Bump CACHE if you ever need to force everyone onto a new version at once. */
-var CACHE='sudoku-v1';
+   background. The game's own update check (requests marked ?fresh) always goes to the network. */
+var CACHE='sudoku-v2';
 var FILES=['./','index.html','manifest.webmanifest','icons/icon-192.png','icons/icon-512.png',
   'icons/icon-maskable-512.png','icons/apple-touch-icon.png','icons/favicon-32.png'];
 
@@ -15,8 +14,9 @@ self.addEventListener('activate',function(e){
   }).then(function(){return self.clients.claim();}));
 });
 self.addEventListener('fetch',function(e){
-  var req=e.request;
-  if(req.method!=='GET'||new URL(req.url).origin!==location.origin)return;
+  var req=e.request,url=new URL(req.url);
+  if(req.method!=='GET'||url.origin!==location.origin)return;
+  if(url.searchParams.has('fresh'))return; /* update checks: straight to the network */
   var key=req.mode==='navigate'?'index.html':req; /* every page visit is the game */
   e.respondWith(caches.open(CACHE).then(function(c){
     return c.match(key,{ignoreSearch:true}).then(function(hit){
