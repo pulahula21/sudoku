@@ -318,6 +318,45 @@ var m=document.querySelector('meta[name="theme-color"]');if(m)m.setAttribute('co
     --active-bg:rgba(230,184,92,.16); --active-text:#fff1d0;
   }
   @media (prefers-reduced-motion:reduce){.cell.ring{animation:none}}
+  /* ===================== Awards ===================== */
+  /* four header buttons: keep the title and version clear of them on phones */
+  @media (max-width:440px){h1{font-size:23px!important;letter-spacing:.17em!important}.ver{font-size:10px;margin-left:2px;letter-spacing:.02em!important}.hdr-btns{gap:5px}.hdr-btns .icon-btn{width:42px;height:42px;border-radius:11px}}
+  @media (max-width:390px){h1{font-size:21px!important;letter-spacing:.14em!important}.hdr-btns .icon-btn{width:39px;height:39px;border-radius:10px}}
+  @media (max-width:350px){.ver{display:none}h1{font-size:19px!important}.hdr-btns .icon-btn{width:35px;height:35px;border-radius:9px}}
+  #awardsBtn{position:relative}
+  #awardsBtn.dot::after{content:"";position:absolute;top:6px;right:6px;width:9px;height:9px;border-radius:50%;background:var(--wrong);box-shadow:0 0 0 2px var(--card)}
+  .aw-card{width:min(94vw,520px);max-height:calc(100dvh - 32px);overflow-y:auto;padding:28px 22px 22px;position:relative}
+  .aw-card h2{margin:0 0 10px}
+  .aw-prog{display:flex;align-items:center;gap:10px;margin:0 4px 6px;font-size:13px;color:var(--muted)}
+  .aw-bar{flex:1;height:8px;border-radius:99px;background:var(--panel);border:1px solid var(--line);overflow:hidden}
+  .aw-bar i{display:block;height:100%;width:0;background:linear-gradient(90deg,#d9a440,#f3cf63);border-radius:99px;transition:width .5s ease}
+  #awCount{font-weight:700;color:var(--text);white-space:nowrap}
+  .aw-grp{margin:18px 0 8px;text-align:left;font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);font-weight:700;display:flex;justify-content:space-between}
+  .aw-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+  @media (min-width:520px){.aw-grid{grid-template-columns:repeat(4,1fr)}}
+  .aw{display:flex;flex-direction:column;align-items:center;gap:5px;padding:10px 4px 9px;border-radius:14px;background:var(--panel);border:1px solid var(--line);position:relative}
+  .aw b{font-size:12.5px;line-height:1.15}
+  .aw small{font-size:10.5px;line-height:1.25;color:var(--muted)}
+  .aw em{font-style:normal;font-size:9.5px;color:var(--muted);opacity:.85}
+  .aw.new{border-color:#d9a440;box-shadow:0 0 0 1px #d9a440 inset}
+  .aw.new::before{content:"New";position:absolute;top:5px;right:6px;font-size:9px;font-weight:800;color:#b8860b;letter-spacing:.05em}
+  .medal{width:54px;height:54px;border-radius:50%;display:flex;align-items:center;justify-content:center;flex:none;position:relative;
+    box-shadow:inset 0 0 0 3px rgba(255,255,255,.35),inset 0 -4px 8px rgba(0,0,0,.18),0 3px 8px rgba(0,0,0,.18)}
+  .medal::after{content:"";position:absolute;inset:6px;border-radius:50%;border:1.5px solid rgba(255,255,255,.45)}
+  .medal svg{width:26px;height:26px;color:#fff;filter:drop-shadow(0 1px 1px rgba(0,0,0,.35))}
+  .medal.b{background:radial-gradient(circle at 35% 30%,#f0b98a,#b8743c 60%,#7d4a20)}
+  .medal.s{background:radial-gradient(circle at 35% 30%,#ffffff,#b7c0c9 60%,#7d8893)}
+  .medal.g{background:radial-gradient(circle at 35% 30%,#fff1b0,#e2ab2e 60%,#a8740c)}
+  .aw.off .medal{background:radial-gradient(circle at 35% 30%,#c9c9c9,#8d8d8d 65%,#6a6a6a);opacity:.4;box-shadow:inset 0 0 0 3px rgba(255,255,255,.2)}
+  .aw.off b{color:var(--muted)}
+  #awPop{position:fixed;left:50%;top:calc(12px + env(safe-area-inset-top,0px));z-index:95;transform:translate(-50%,-160%);transition:transform .35s cubic-bezier(.2,.9,.3,1.2);
+    display:flex;align-items:center;gap:12px;padding:9px 18px 9px 10px;border-radius:999px;background:var(--card);border:1px solid #d9a440;box-shadow:0 10px 30px rgba(0,0,0,.25);cursor:pointer;max-width:calc(100vw - 24px)}
+  #awPop.show{transform:translate(-50%,0)}
+  #awPop .medal{width:40px;height:40px}
+  #awPop .medal svg{width:20px;height:20px}
+  #awPop .t{display:flex;flex-direction:column;text-align:left;line-height:1.2;min-width:0}
+  #awPop .t span{font-size:11px;color:#b8860b;font-weight:800;letter-spacing:.08em;text-transform:uppercase}
+  #awPop .t b{font-size:15px;color:var(--text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
   /* ===================== Mountain Goat mode ===================== */
 @font-face{font-family:"Bree Serif";src:url(data:font/woff2;base64,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) format("woff2");font-weight:400;font-display:swap}
   #gtLine{display:none;align-items:center;justify-content:space-between;gap:10px;font-size:11.5px;color:var(--muted);padding-top:6px;min-height:20px}
@@ -677,7 +716,7 @@ var m=document.querySelector('meta[name="theme-color"]');if(m)m.setAttribute('co
 
 <div class="app">
   <header>
-    <h1>SUDOKU<span id="verTag" class="ver">v1.1.0</span></h1>
+    <h1>SUDOKU<span id="verTag" class="ver">v1.2.0</span></h1>
     <div class="hdr-btns">
       <button id="themeBtn" class="icon-btn" title="Toggle light/dark">
         <svg class="sun" viewBox="0 0 24 24" width="24" height="24" fill="none" aria-hidden="true">
@@ -688,6 +727,11 @@ var m=document.querySelector('meta[name="theme-color"]');if(m)m.setAttribute('co
         </svg>
         <svg class="moon" viewBox="0 0 24 24" width="24" height="24" fill="none" aria-hidden="true">
           <path d="M20 14.6A8.5 8.5 0 0 1 9.4 4a8.5 8.5 0 1 0 10.6 10.6z" fill="currentColor"/>
+        </svg>
+      </button>
+      <button id="awardsBtn" class="icon-btn" title="Awards" aria-label="Awards">
+        <svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <path d="M7.5 3.5h9v5.2a4.5 4.5 0 0 1-9 0z" fill="currentColor" fill-opacity=".25"/><path d="M7.5 5.5H4.5a3.2 3.2 0 0 0 3.4 4"/><path d="M16.5 5.5h3a3.2 3.2 0 0 1-3.4 4"/><path d="M12 13.2v3.6"/><path d="M8.5 20.5h7"/><path d="M9.5 16.8h5l.6 3.7H8.9z"/>
         </svg>
       </button>
       <button id="statsBtn" class="icon-btn" title="Game Tracker">
@@ -784,6 +828,15 @@ var m=document.querySelector('meta[name="theme-color"]');if(m)m.setAttribute('co
   </div>
 </div>
 
+<div id="awOverlay" class="overlay hidden">
+  <div class="card aw-card">
+    <button class="close-x" id="closeAwBtn">&times;</button>
+    <h2>Awards</h2>
+    <div class="aw-prog"><div class="aw-bar"><i id="awBar"></i></div><span id="awCount"></span></div>
+    <div id="awList"></div>
+  </div>
+</div>
+<div id="awPop" role="status" aria-live="polite"></div>
 <div id="trackerOverlay" class="overlay hidden">
   <div class="card tracker-card">
     <button class="close-x" id="closeTrackerBtn">&times;</button>
@@ -944,7 +997,7 @@ var m=document.querySelector('meta[name="theme-color"]');if(m)m.setAttribute('co
 'use strict';
 window.__sudokuBoot=true;
 var bm=document.getElementById('bootMsg');if(bm)bm.style.display='none';
-var vt=document.getElementById('verTag');if(vt)vt.textContent='v1.1.0';
+var vt=document.getElementById('verTag');if(vt)vt.textContent='v1.2.0';
 
 function $(s){return document.querySelector(s);}
 function cap(s){return s.charAt(0).toUpperCase()+s.slice(1);}
@@ -1863,7 +1916,9 @@ function melSong(){ /* the whole board, row by row, with a bass line */
   if(mel.playing){melStop();return;}
   var t=melPlay(all,.17,{bass:true,loud:true});
   if(t)$('#melPlayLbl').textContent='Stop';
+  if(t&&isComplete()&&!wrongCount()){var tok=mel.token;setTimeout(function(){if(mel.playing&&mel.token===tok)awardCheck({k:'song',m:'melody'});},Math.max(0,t*1000-400));}
 }
+function wrongCount(){var n=0;for(var k in wrongSet)n++;return n;}
 function melCadence(){var c=melCtx();if(!c)return;[1,3,4,6,9].forEach(function(d,n){melVoice(c,c.destination,MEL_HZ[d],c.currentTime+n*.09,1.6,.16);});}
 
 /* ===================== Reverse mode ===================== */
@@ -1969,6 +2024,7 @@ function revEnd(minimal){
   var ms=elapsedMs(),c=revClues(),d=rv.par-c;
   $('#timeVal').textContent=fmt(ms);
   recordRev(ms,c);
+  awardCheck({win:true,m:'reverse',d:diff,ms:ms,mist:mistakes,hints:3-hintsLeft,hm:hintMode,cl:c,par:rv.par,min:!!minimal});
   $('#endTitle').textContent=minimal?'Minimal puzzle!':'Locked in';
   $('#endStats').textContent=c+' clues \u00B7 par '+rv.par+' \u00B7 '+(d>0?d+' under par':d===0?'at par':(-d)+' over par')
     +' \u00B7 Time '+fmt(ms)+' \u00B7 Mistakes '+mistakes+(hintMode?' \u00B7 '+BULB+' Hint Mode on':'');
@@ -2004,7 +2060,7 @@ function startRun(){
   newGame();
 }
 function dgSetupFloor(){ /* called from newGame once the board exists */
-  hintsLeft=dg.inv.hint;
+  hintsLeft=dg.inv.hint;dg.hp0=dg.hp;
   dg.phase='play';dg.paid=0;dg.lastScr=0;
   dg.lit=new Array(81).fill(dg.mods.fog?0:1);
   if(dg.mods.fog){ /* lantern light: the centre box and the four boxes beside it; the corners start dark */
@@ -2102,6 +2158,7 @@ function floorCleared(){
   var reward=5+dg.floor*2;dg.coins+=reward;
   dg.phase='shop';dg.nextMods=rollMods(dg.floor+1);
   dgStats();saveRun();
+  awardCheck({win:true,m:'dungeon',d:diff,fl:dg.floor,coins:dg.coins,clean:dg.hp0!=null&&dg.hp>=dg.hp0});
   confetti();sfx.win();
   setTimeout(function(){showShop(reward);},700);
 }
@@ -2149,6 +2206,7 @@ function recordRun(){
   x.n=(x.n||0)+1;x.cl=(x.cl||0)+cl;x.boxes=(x.boxes||0)+dg.boxes;x.hp=(x.hp||0)+dg.mist;
   pushRec(s,'dungeon',{fl:dg.floor,cl:cl,ms:Date.now()-dg.start,mist:dg.mist,bx:dg.boxes});
   store.setItem(STATS_KEY,JSON.stringify(s));
+  if(typeof awardCheck==='function')awardCheck(null,false);
 }/* Peek: arm it, then tap any cell; its box shows the answers faintly for 3 seconds and stays lit in fog */
 function togglePeek(){
   if(!dgMode||finished)return;
@@ -2321,6 +2379,7 @@ function endGame(){
   finished=true;runTimer(false);syncUndo();
   $('#timeVal').textContent=fmt(ms);
   recordGame(ms);
+  awardCheck({win:true,m:curModeKey(),d:diff,ms:ms,mist:mistakes,hints:3-hintsLeft,hm:hintMode,sc:score,ml:melds,lp:gt.leaps,rs:gt.rescues});
   $('#endStats').textContent=(mjMode?'Score '+score.toLocaleString()+' \u00B7 Melds '+melds+' \u00B7 ':'')
     +(gtMode?'Leaps '+gt.leaps+(gt.rescues?' ('+gt.rescues+(gt.rescues===1?' rescue':' rescues')+')':'')+' \u00B7 Hay left '+gt.hay+' \u00B7 ':'')
     +'Time '+fmt(ms)+' \u00B7 Mistakes '+mistakes+' \u00B7 Hints used '+(3-hintsLeft)+(hintMode?' \u00B7 '+BULB+' Hint Mode on':'');
@@ -2465,6 +2524,7 @@ document.addEventListener('visibilitychange',function(){if(document.hidden)setPa
 
 document.addEventListener('keydown',function(e){
   if(!$('#trackerOverlay').classList.contains('hidden')){if(e.key==='Escape')$('#trackerOverlay').classList.add('hidden');return;}
+  if(!$('#awOverlay').classList.contains('hidden')){if(e.key==='Escape')$('#awOverlay').classList.add('hidden');return;}
   var k=e.key;
   if(pausedAt&&k!=='p'&&k!=='P')return; /* no moves under the pause screen */
   if((e.ctrlKey||e.metaKey)&&(k==='z'||k==='Z')){e.preventDefault();undo();}
@@ -2492,6 +2552,134 @@ document.addEventListener('keydown',function(e){
 });
 
 bootGame();
+
+/* ===================== Awards ===================== */
+/* Badges are unlocked from saved stats (so past games count) and from what happens at the end of a game.
+   Earned awards are stored with the time they were earned. */
+var AW_KEY='sudoku.awards.v1',AW_OPEN='sudoku.awards.opened';
+var AW_ICON={
+  general:'<path d="M12 2.8l2.7 5.6 6.1.9-4.4 4.3 1 6.1L12 16.8l-5.4 2.9 1-6.1-4.4-4.3 6.1-.9z" fill="currentColor"/>',
+  classic:'<g fill="none" stroke="currentColor" stroke-width="2"><rect x="3.5" y="3.5" width="17" height="17" rx="2"/><path d="M9.2 3.5v17M14.8 3.5v17M3.5 9.2h17M3.5 14.8h17"/></g>',
+  mahjong:'<rect x="5.5" y="2.8" width="13" height="18.4" rx="2.4" fill="none" stroke="currentColor" stroke-width="2"/><circle cx="12" cy="8" r="1.7" fill="currentColor"/><circle cx="9.3" cy="13.5" r="1.7" fill="currentColor"/><circle cx="14.7" cy="13.5" r="1.7" fill="currentColor"/>',
+  cat:'<use href="#catAwake"/>',
+  dungeon:'<path d="M12 2.5c1 3 4.5 4.6 4.5 8.6a4.5 4.5 0 0 1-9 0c0-1.9 1-3.1 2-4 .2 1.6 1 2.5 2 2.8-.6-2.6-.2-5.3.5-7.4z" fill="currentColor"/><path d="M9.5 16.5h5l-1 5h-3z" fill="currentColor" opacity=".8"/>',
+  reverse:'<rect x="5" y="10.5" width="14" height="10" rx="2.2" fill="currentColor"/><path d="M8 10.5V7.8a4 4 0 0 1 8 0v2.7" fill="none" stroke="currentColor" stroke-width="2.2"/>',
+  melody:'<path d="M9 18.5V5.2l10-2v12.6" fill="none" stroke="currentColor" stroke-width="2"/><ellipse cx="6.8" cy="18.6" rx="2.8" ry="2.2" fill="currentColor"/><ellipse cx="16.8" cy="15.9" rx="2.8" ry="2.2" fill="currentColor"/>',
+  goat:'<path d="M2.5 20.5L10 7l3.6 6.2 2.2-3.2 5.7 10.5z" fill="currentColor"/><path d="M10 7l-2.2 4 1.4-.6 1 1.2 1.1-1.3 1.2.6z" fill="#fff" opacity=".7"/>'
+};
+var AW_GROUPS=[['general','General'],['classic','Classic'],['mahjong','Mahjong'],['cat','Cat Caf\u00E9'],['dungeon','Dungeon'],['reverse','Reverse'],['melody','Melody'],['goat','Mountain Goat']];
+var AW_DIFFS=['easy','medium','hard','expert'];
+function awSum(o){var n=0;if(o)for(var k in o)n+=(o[k]&&o[k].p)||0;return n;}
+function awWins(s){return awSum(s.modes)+awSum(s.cat)+awSum(s.mel)+awSum(s.goat)+awSum(s.mj)+awSum(s.rev)+((s.dg&&s.dg.cl)||0);}
+function awDg(s,e){var b=(s.dg&&s.dg.best)||0;if(e&&e.m==='dungeon')b=Math.max(b,e.fl);return b;}
+/* any saved game in these modes matching fn (recent lists keep the last ten per mode) */
+function awRec(s,modes,fn){for(var k=0;k<modes.length;k++){var l=(s.rec&&s.rec[modes[k]])||[];for(var j=0;j<l.length;j++)if(fn(l[j]))return true;}return false;}
+var AW_TIMED=['classic','mahjong','cat','reverse','melody','goat'];
+function awFast(s,diffs,lim){
+  var src=[s.modes,s.cat,s.mel,s.goat],k,d;
+  for(k=0;k<src.length;k++)if(src[k])for(d=0;d<diffs.length;d++){var x=src[k][diffs[d]];if(x&&x.fast&&x.fast<lim)return true;}
+  return awRec(s,AW_TIMED,function(r){return diffs.indexOf(r.d)>=0&&r.ms<lim;});
+}
+function awWin(e,m){return !!(e&&e.win&&(!m||e.m===m));}
+var AWARDS=[
+  {id:'first',g:'general',t:'b',n:'First Steps',r:'Win your first puzzle',f:function(s){return awWins(s)>=1;}},
+  {id:'w10',g:'general',t:'b',n:'Regular',r:'Win 10 puzzles',f:function(s){return awWins(s)>=10;}},
+  {id:'w50',g:'general',t:'s',n:'Devoted',r:'Win 50 puzzles',f:function(s){return awWins(s)>=50;}},
+  {id:'w100',g:'general',t:'g',n:'Centurion',r:'Win 100 puzzles',f:function(s){return awWins(s)>=100;}},
+  {id:'expert',g:'general',t:'s',n:'Expert Solver',r:'Win an Expert puzzle in any mode',f:function(s,e){
+    return [s.modes,s.cat,s.mel,s.goat,s.mj,s.rev].some(function(o){return o&&o.expert&&o.expert.p>0;})||awDg(s,e)>=7;}},
+  {id:'flawless',g:'general',t:'g',n:'Flawless',r:'Win with no mistakes and no hints',f:function(s,e){return awWin(e)&&e.m!=='dungeon'&&!e.mist&&!e.hints;}},
+  {id:'unaided',g:'general',t:'s',n:'Unassisted',r:'Win Medium or harder with Hint Mode off',f:function(s,e){
+    return (awWin(e)&&e.m!=='dungeon'&&!e.hm&&e.d!=='easy')||awRec(s,AW_TIMED,function(r){return !r.h&&r.d&&r.d!=='easy';});}},
+  {id:'quick',g:'general',t:'s',n:'Quick Study',r:'Win Medium or harder in under 5 minutes',f:function(s){return awFast(s,['medium','hard','expert'],300000);}},
+  {id:'blitz',g:'general',t:'b',n:'Lightning',r:'Win an Easy puzzle in under 2 minutes',f:function(s){return awFast(s,['easy'],120000);}},
+  {id:'explorer',g:'general',t:'g',n:'Explorer',r:'Win in all seven modes',f:function(s,e){
+    return awSum(s.modes)>0&&awSum(s.mj)>0&&awSum(s.cat)>0&&awDg(s,e)>=1&&awSum(s.rev)>0&&awSum(s.mel)>0&&awSum(s.goat)>0;}},
+
+  {id:'cl_25',g:'classic',t:'b',n:'Classicist',r:'Win 25 Classic puzzles',f:function(s){return awSum(s.modes)>=25;}},
+  {id:'cl_ladder',g:'classic',t:'s',n:'Full Ladder',r:'Win Classic at every difficulty',f:function(s){return AW_DIFFS.every(function(d){return s.modes[d]&&s.modes[d].p>0;});}},
+  {id:'cl_pace',g:'classic',t:'g',n:'Expert Pace',r:'Win Classic Expert in under 15 minutes',f:function(s){var x=s.modes.expert;return !!(x&&x.fast&&x.fast<900000);}},
+
+  {id:'mj_win',g:'mahjong',t:'b',n:'First Hand',r:'Win a Mahjong game',f:function(s){return awSum(s.mj)>0;}},
+  {id:'mj_score',g:'mahjong',t:'s',n:'High Roller',r:'Score 3,000 in one game',f:function(s){return AW_DIFFS.some(function(d){return s.mj&&s.mj[d]&&s.mj[d].best>=3000;});}},
+  {id:'mj_melds',g:'mahjong',t:'g',n:'Meld Master',r:'Score 8 melds in one game',f:function(s,e){return awWin(e,'mahjong')&&e.ml>=8;}},
+
+  {id:'cat_win',g:'cat',t:'b',n:'Caf\u00E9 Visitor',r:'Win a Cat Caf\u00E9 game',f:function(s){return awSum(s.cat)>0;}},
+  {id:'cat_10',g:'cat',t:'s',n:'Caf\u00E9 Regular',r:'Win 10 Cat Caf\u00E9 games',f:function(s){return awSum(s.cat)>=10;}},
+  {id:'cat_clean',g:'cat',t:'g',n:'Purrfect',r:'Win Cat Caf\u00E9 without a single hiss',f:function(s,e){return (awWin(e,'cat')&&!e.mist)||awRec(s,['cat'],function(r){return !r.mist;});}},
+  {id:'cat_expert',g:'cat',t:'g',n:'Cat Herder',r:'Win Cat Caf\u00E9 on Expert',f:function(s){return !!(s.cat&&s.cat.expert&&s.cat.expert.p>0);}},
+
+  {id:'dg_1',g:'dungeon',t:'b',n:'Into the Dark',r:'Clear your first Dungeon floor',f:function(s,e){return awDg(s,e)>=1;}},
+  {id:'dg_clean',g:'dungeon',t:'s',n:'Untouched',r:'Clear floor 5 or deeper without losing a heart',f:function(s,e){return awWin(e,'dungeon')&&e.fl>=5&&e.clean;}},
+  {id:'dg_rich',g:'dungeon',t:'s',n:'Hoarder',r:'Hold 100 coins at once',f:function(s,e){return awWin(e,'dungeon')&&e.coins>=100;}},
+  {id:'dg_lava',g:'dungeon',t:'g',n:'Fire Walker',r:'Clear a floor in the Lava depths',f:function(s,e){return awDg(s,e)>=9;}},
+  {id:'dg_10',g:'dungeon',t:'g',n:'Delver',r:'Clear 10 floors in one run',f:function(s,e){return awDg(s,e)>=10;}},
+
+  {id:'rv_win',g:'reverse',t:'b',n:'Backwards',r:'Finish a Reverse puzzle',f:function(s){return awSum(s.rev)>0;}},
+  {id:'rv_par',g:'reverse',t:'s',n:'On Par',r:'Finish Reverse at or under par',f:function(s){return AW_DIFFS.some(function(d){var x=s.rev&&s.rev[d];return x&&x.best&&x.best<=REV_PAR[d];});}},
+  {id:'rv_min',g:'reverse',t:'s',n:'Bare Bones',r:'Strip a puzzle down until every clue is locked',f:function(s,e){return awWin(e,'reverse')&&e.min;}},
+  {id:'rv_5',g:'reverse',t:'g',n:'Minimalist',r:'Finish Reverse 5 under par',f:function(s){return AW_DIFFS.some(function(d){var x=s.rev&&s.rev[d];return x&&x.best&&x.best<=REV_PAR[d]-5;});}},
+
+  {id:'mel_win',g:'melody',t:'b',n:'First Song',r:'Win a Melody game',f:function(s){return awSum(s.mel)>0;}},
+  {id:'mel_song',g:'melody',t:'s',n:'Encore',r:'Play a solved puzzle\u2019s whole song',f:function(s,e){return !!(e&&e.k==='song');}},
+  {id:'mel_clean',g:'melody',t:'g',n:'Perfect Pitch',r:'Win Melody without a sour note',f:function(s,e){return (awWin(e,'melody')&&!e.mist)||awRec(s,['melody'],function(r){return !r.mist;});}},
+
+  {id:'gt_win',g:'goat',t:'b',n:'Summit',r:'Win a Mountain Goat game',f:function(s){return awSum(s.goat)>0;}},
+  {id:'gt_sure',g:'goat',t:'s',n:'Sure-footed',r:'Win without a rescue',f:function(s,e){return (awWin(e,'goat')&&!e.rs)||awRec(s,['goat'],function(r){return !r.rs;});}},
+  {id:'gt_expert',g:'goat',t:'g',n:'Well Stocked',r:'Win Expert without a rescue',f:function(s,e){return (awWin(e,'goat')&&e.d==='expert'&&!e.rs)||awRec(s,['goat'],function(r){return r.d==='expert'&&!r.rs;});}},
+  {id:'gt_noleap',g:'goat',t:'g',n:'Mountaineer',r:'Win without a single leap',f:function(s,e){return (awWin(e,'goat')&&!e.lp)||awRec(s,['goat'],function(r){return r.lp===0;});}}
+];
+function awLoad(){try{return JSON.parse(store.getItem(AW_KEY))||{};}catch(e){return {};}}
+function awMedal(a,off){return '<div class="medal '+(off?'':a.t)+'"><svg viewBox="0 0 24 24" aria-hidden="true">'+AW_ICON[a.g]+'</svg></div>';}
+/* check every award; e describes the game that just ended (or null). quiet: no pop-ups (first load) */
+function awardCheck(e,quiet){
+  var s=loadStats(),got=awLoad(),fresh=[],now=Date.now();
+  AWARDS.forEach(function(a){
+    if(got[a.id])return;
+    var ok=false;try{ok=a.f(s,e||null);}catch(x){}
+    if(ok){got[a.id]=now;fresh.push(a);}
+  });
+  if(fresh.length){store.setItem(AW_KEY,JSON.stringify(got));if(!quiet)fresh.forEach(function(a,k){setTimeout(function(){awPop(a);},900+k*3000);});}
+  awDot();
+}
+function awDot(){
+  var got=awLoad(),op=+store.getItem(AW_OPEN)||0,any=false;
+  for(var k in got)if(got[k]>op){any=true;break;}
+  $('#awardsBtn').classList.toggle('dot',any);
+}
+var awPopTm=null;
+function awPop(a){
+  var p=$('#awPop');
+  p.innerHTML=awMedal(a,false)+'<div class="t"><span>Award earned</span><b>'+a.n+'</b></div>';
+  p.classList.remove('show');void p.offsetWidth;p.classList.add('show');
+  if(sfx.on)[784,988,1319].forEach(function(f,i){sfx.tone(f,.22,'triangle',.12,i*.09);});
+  clearTimeout(awPopTm);awPopTm=setTimeout(function(){p.classList.remove('show');},2700);
+}
+function renderAwards(){
+  var got=awLoad(),op=+store.getItem(AW_OPEN)||0,n=0,h='';
+  AW_GROUPS.forEach(function(gp){
+    var list=AWARDS.filter(function(a){return a.g===gp[0];}),gn=0,cards='';
+    list.forEach(function(a){
+      var ts=got[a.id];if(ts){n++;gn++;}
+      cards+='<div class="aw'+(ts?'':' off')+(ts&&ts>op?' new':'')+'">'+awMedal(a,!ts)+'<b>'+a.n+'</b><small>'+a.r+'</small>'
+        +(ts?'<em>'+new Date(ts).toLocaleDateString(undefined,{month:'short',day:'numeric',year:'numeric'})+'</em>':'')+'</div>';
+    });
+    h+='<div class="aw-grp"><span>'+gp[1]+'</span><span>'+gn+' / '+list.length+'</span></div><div class="aw-grid">'+cards+'</div>';
+  });
+  $('#awList').innerHTML=h;
+  $('#awCount').textContent=n+' of '+AWARDS.length;
+  $('#awBar').style.width=(n/AWARDS.length*100).toFixed(1)+'%';
+}
+function openAwards(){
+  $('#awPop').classList.remove('show');
+  renderAwards();$('#awOverlay').classList.remove('hidden');
+  store.setItem(AW_OPEN,String(Date.now()));awDot();
+}
+$('#awardsBtn').addEventListener('click',openAwards);
+$('#awPop').addEventListener('click',openAwards);
+$('#closeAwBtn').addEventListener('click',function(){$('#awOverlay').classList.add('hidden');});
+$('#awOverlay').addEventListener('click',function(e){if(e.target===this)this.classList.add('hidden');});
+awardCheck(null,true); /* past games unlock their badges quietly */
 
 /* ---------- update check (installed web app) ----------
    Reads the version tag from the copy on the server and offers to switch to it. */
