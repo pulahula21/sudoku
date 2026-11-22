@@ -320,13 +320,22 @@ var m=document.querySelector('meta[name="theme-color"]');if(m)m.setAttribute('co
   @media (prefers-reduced-motion:reduce){.cell.ring{animation:none}}
   /* ===================== Reverse mode ===================== */
   #removeBtn,#finishBtn{display:none}
-  body.rev #removeBtn,body.rev #finishBtn{display:flex}
+  body.rev #finishBtn{display:flex}
   body.rev #notesBtn,body.rev #quickBtn{display:none}
   #rvLine{display:none;align-items:center;justify-content:space-between;gap:10px;font-size:11.5px;color:var(--muted);padding-top:6px;min-height:20px}
   body.rev #rvLine{display:flex}
   #rvRuleBtn{flex:none;background:none;border:1px solid var(--line-strong);border-radius:999px;color:var(--text);font:inherit;font-size:11px;padding:2px 9px;cursor:pointer}
   #rvRuleBtn:hover{color:var(--accent)}
-  body.rev .cell.locked{opacity:.38}
+  /* Reverse: bold = a clue still on the board, faded = removed, padlock = can't be removed right now */
+  body.rev .cell{font-weight:700;color:var(--given)}
+  body.rev .cell .rgh{font-weight:400;opacity:.2}
+  body.rev .cell.locked{background:var(--cell-unit)}
+  body.rev .cell.locked::before{content:"";position:absolute;top:7%;right:7%;width:24%;height:24%;background:var(--muted);
+    -webkit-mask:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M7 10V7a5 5 0 0 1 10 0v3h1a1 1 0 0 1 1 1v9a1 1 0 0 1-1 1H6a1 1 0 0 1-1-1v-9a1 1 0 0 1 1-1zm2 0h6V7a3 3 0 0 0-6 0z'/%3E%3C/svg%3E") center/contain no-repeat;mask:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M7 10V7a5 5 0 0 1 10 0v3h1a1 1 0 0 1 1 1v9a1 1 0 0 1-1 1H6a1 1 0 0 1-1-1v-9a1 1 0 0 1 1-1zm2 0h6V7a3 3 0 0 0-6 0z'/%3E%3C/svg%3E") center/contain no-repeat}
+  body.rev .cell.alt .rgh{opacity:0}
+  body.rev .cell.altsrc{box-shadow:inset 0 0 0 2px var(--wrong)}
+  body.rev .cell.hintme{box-shadow:inset 0 0 0 3px var(--accent);animation:hintme 1s ease-in-out 3}
+  @keyframes hintme{50%{box-shadow:inset 0 0 0 3px var(--accent),0 0 14px var(--accent)}}
   body.rev .cell.alt::after{color:var(--wrong);opacity:.9}
   body.rev .cell.alt{background:color-mix(in srgb,var(--wrong) 14%,transparent)}
   body.rev .pad .btn{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:1px;line-height:1}
@@ -613,7 +622,7 @@ var m=document.querySelector('meta[name="theme-color"]');if(m)m.setAttribute('co
 
 <div class="app">
   <header>
-    <h1>SUDOKU<span id="verTag" class="ver">v31</span></h1>
+    <h1>SUDOKU<span id="verTag" class="ver">v1.0.0</span></h1>
     <div class="hdr-btns">
       <button id="themeBtn" class="icon-btn" title="Toggle light/dark">
         <svg class="sun" viewBox="0 0 24 24" width="24" height="24" fill="none" aria-hidden="true">
@@ -808,15 +817,18 @@ var m=document.querySelector('meta[name="theme-color"]');if(m)m.setAttribute('co
 <div id="rvRules" class="overlay hidden">
   <div class="card rules-card">
     <h2>Reverse</h2>
-    <p>You get a puzzle that is already solved. Your job is to take numbers away until no more can go.</p>
-    <p>Every removal must leave a puzzle with exactly one solution. Tap a number to select it, then tap it again (or tap Remove) to take it out.</p>
-    <p>If a removal would let the puzzle be solved two ways, the number stays, it counts as a mistake, and the cells that could flip flash in red so you can see why.</p>
+    <p>Reverse starts from a finished grid and runs sudoku backward. <b>Bold</b> numbers are clues still on the board. <span style="opacity:.45">Faded</span> numbers have been removed. Some are already gone when you start.</p>
+    <p>Your goal is to remove as many clues as you can while the puzzle still has only one solution. Fewer clues makes a harder puzzle, and a better score.</p>
     <table class="rules-pts">
-      <tr><td><b>Par</b></td><td class="txt">Easy 28 &middot; Medium 26 &middot; Hard 25 &middot; Expert 23 clues. Finish at or under par to beat it.</td></tr>
-      <tr><td><b>Hint Mode</b></td><td class="txt">Fades the numbers that can&rsquo;t be removed right now and shows how many still can.</td></tr>
-      <tr><td><b>Hint</b></td><td class="txt">Points to one number that is safe to remove.</td></tr>
+      <tr><td><b>Remove</b></td><td class="txt">Tap a bold number. If the puzzle still has one solution, it fades.</td></tr>
+      <tr><td><b>Blocked</b></td><td class="txt">If removing it would allow a second solution, it stays and counts as a mistake. The empty cells that could change flash red with the numbers they could become.</td></tr>
+      <tr><td><b>Put back</b></td><td class="txt">Tap a faded number to restore it. This is always allowed.</td></tr>
+      <tr><td><b>Hint Mode</b></td><td class="txt">Puts a padlock on clues that can&rsquo;t be removed right now and shows how many still can.</td></tr>
+      <tr><td><b>Hint</b></td><td class="txt">Makes one removable clue glow.</td></tr>
+      <tr><td><b>Par</b></td><td class="txt">Easy 28 &middot; Medium 26 &middot; Hard 25 &middot; Expert 23 clues.</td></tr>
     </table>
-    <p>The order matters: each removal changes what else can go. The game ends on its own when the puzzle is minimal, or tap Finish to lock it in early.</p>
+    <p>Order matters: each removal can lock other clues in place, so careful choices can finish several clues lower than quick ones. A finished puzzle can be missing at most one number entirely, so the last copy of a number is often locked.</p>
+    <p>The game ends by itself when nothing more can be removed. Tap Finish to stop early.</p>
     <button class="btn primary" id="rvRulesBtn">Got it</button>
   </div>
 </div>
@@ -859,7 +871,7 @@ var m=document.querySelector('meta[name="theme-color"]');if(m)m.setAttribute('co
 'use strict';
 window.__sudokuBoot=true;
 var bm=document.getElementById('bootMsg');if(bm)bm.style.display='none';
-var vt=document.getElementById('verTag');if(vt)vt.textContent='v31';
+var vt=document.getElementById('verTag');if(vt)vt.textContent='v1.0.0';
 
 function $(s){return document.querySelector(s);}
 function cap(s){return s.charAt(0).toUpperCase()+s.slice(1);}
@@ -1133,6 +1145,8 @@ function render(){
     if(revMode){
       if(v&&hintMode&&rv.lock&&rv.lock[i]===1)cls+=' locked';
       if(rv.alt&&rv.alt[i]){cls+=' ghost alt';el.setAttribute('data-ghost',rv.alt[i]);}
+      if(rv.altSrc===i)cls+=' altsrc';
+      if(rv.hint===i)cls+=' hintme';
     }
     if(ghostBox>=0&&BOX[i]===ghostBox&&!v){cls+=' ghost';el.setAttribute('data-ghost',solution[i]);}
     if(puzzle[i])cls+=' given';
@@ -1147,9 +1161,11 @@ function render(){
     if(lastCls[i]!==cls){el.className=cls;lastCls[i]=cls;}
     var key=v?(catMode?'c'+v+(napping?'z':''):(melMode?'m':'v')+v):(notes[i]?(catMode?'p':'n')+notes[i]:'');
     if(fogged&&puzzle[i])key='F'; /* fog hides the givens it covers */
+    if(revMode&&!v)key='r'+solution[i]; /* Reverse shows removed numbers faded */
     if(lastKey[i]!==key){
       lastKey[i]=key;
       if(key==='F')el.textContent='';
+      else if(revMode&&!v)el.innerHTML='<span class="rgh">'+solution[i]+'</span>';
       else if(v&&catMode)el.innerHTML=catSvg(v,napping);
       else if(v&&melMode)el.innerHTML=v+'<span class="nn">'+MEL_NAME[v]+'</span>';
       else if(v)el.textContent=v;
@@ -1668,7 +1684,7 @@ function revGenerate(){ /* a solved grid, thinned at random to 45 clues while st
   for(;;){sol=new Array(81).fill(0);fillNodes=0;if(fillGrid(sol,new Masks(sol)))break;}
   var p=sol.slice(),clues=81,order=[],i;for(i=0;i<81;i++)order.push(i);shuffle(order);
   for(var n=0;n<81&&clues>REV_START;n++){i=order[n];if(uniqueWithout(p,i)){p[i]=0;clues--;}}
-  rv={par:REV_PAR[diff],lock:null,alt:null,altTm:null,safe:0};revDigit=0;
+  rv={par:REV_PAR[diff],lock:null,alt:null,altSrc:-1,hint:-1,altTm:null,safe:0};revDigit=0;
   return {solution:sol,puzzle:p};
 }
 function uniqueWithout(g,i){var v=g[i];g[i]=0;var ok=countSolutions(g,new Masks(g),2)===1;g[i]=v;return ok;}
@@ -1680,8 +1696,9 @@ function scanLocks(){ /* which clues could still go: 0 = removable, 1 = locked *
 }
 function revLine(){
   if(!revMode)return;
-  var t='Par '+rv.par+' \u00B7 '+revClues()+' clues';
-  if(hintMode&&rv.lock)t+=' \u00B7 '+rv.safe+' can still go';
+  var t;
+  if(!undoStack.length&&!mistakes)t='Tap a bold number to remove it \u00B7 par '+rv.par;
+  else{t=revClues()+' clues \u00B7 par '+rv.par;if(hintMode&&rv.lock)t+=' \u00B7 '+rv.safe+' can still go';}
   $('#rvInfo').textContent=t;
 }
 function revPad(){
@@ -1697,13 +1714,12 @@ function revPad(){
 function revDigitTap(d){revDigit=(revDigit===d)?0:d;selected=-1;render();revPad();}
 function revTap(i){
   if(finished)return;
-  revDigit=0;
-  if(i===selected&&puzzle[i]){revRemove(i);return;}
-  selected=i;hlDigit=0;render();revPad();
+  revDigit=0;selected=-1;
+  if(puzzle[i])revRemove(i);else revRestore(i);
 }
 function revRemove(i){
   if(finished||!puzzle[i])return;
-  clearTimeout(rv.altTm);rv.alt=null;
+  clearTimeout(rv.altTm);rv.alt=null;rv.altSrc=-1;rv.hint=-1;
   var ok=(rv.lock&&rv.lock[i]>=0)?rv.lock[i]===0:uniqueWithout(puzzle,i);
   if(ok){
     undoStack.push({ri:i,v:puzzle[i]});
@@ -1712,10 +1728,18 @@ function revRemove(i){
     revAfter();
   }else{
     mistakes++;setMistakeDisplay();
-    rv.alt=altSolution(i);
-    sfx.error();shake(i);toast('Two solutions possible',0);render();
-    rv.altTm=setTimeout(function(){rv.alt=null;render();},2400);
+    rv.alt=altSolution(i);rv.altSrc=i;
+    sfx.error();shake(i);toast('Removing that allows a second solution',0);render();revLine();
+    rv.altTm=setTimeout(function(){rv.alt=null;rv.altSrc=-1;render();},3000);
   }
+}
+function revRestore(i){ /* putting a clue back is always allowed and costs nothing */
+  if(finished||puzzle[i])return;
+  clearTimeout(rv.altTm);rv.alt=null;rv.altSrc=-1;rv.hint=-1;
+  undoStack.push({ri:i,v:0});
+  puzzle[i]=solution[i];grid[i]=solution[i];
+  sfx.tone(380,.07,'triangle',.12);sfx.tone(560,.09,'triangle',.1,.05);
+  revAfter();pop(i);
 }
 /* Find the second solution that removing cell i would allow; return the empty cells where it differs */
 function altSolution(i){
@@ -1728,7 +1752,7 @@ function altSolution(i){
     for(var v=1;v<=9&&!found;v++){if(!(bm&(1<<v)))continue;g[best]=v;m.add(best,v);walk();m.del(best,v);g[best]=0;}
   })();
   if(!found)return null;
-  var map={};for(var k=0;k<81;k++)if((!puzzle[k]||k===i)&&found[k]!==solution[k])map[k]=found[k];
+  var map={};for(var k=0;k<81;k++)if(!puzzle[k]&&k!==i&&found[k]!==solution[k])map[k]=found[k];
   return map;
 }
 function revAfter(){
@@ -1738,7 +1762,7 @@ function revAfter(){
 function revUndo(){
   if(finished||!undoStack.length)return;
   var u=undoStack.pop();if(u.ri===undefined)return;
-  puzzle[u.ri]=u.v;grid[u.ri]=u.v;clearTimeout(rv.altTm);rv.alt=null;sfx.note();
+  puzzle[u.ri]=u.v;grid[u.ri]=u.v;clearTimeout(rv.altTm);rv.alt=null;rv.altSrc=-1;rv.hint=-1;sfx.note();
   revAfter();
 }
 function revHint(){
@@ -1746,8 +1770,9 @@ function revHint(){
   if(!rv.lock)scanLocks();
   var safe=[];for(var i=0;i<81;i++)if(puzzle[i]&&rv.lock[i]===0)safe.push(i);
   if(!safe.length){toast('Nothing left to remove',0);return;}
-  hintsLeft--;selected=safe[Math.floor(Math.random()*safe.length)];revDigit=0;
-  updateStat3();render();revPad();pop(selected);toast('This one can go',0);sfx.note();
+  hintsLeft--;rv.hint=safe[Math.floor(Math.random()*safe.length)];revDigit=0;selected=-1;
+  updateStat3();render();revPad();toast('The glowing number can go',0);sfx.note();
+  var h=rv.hint;setTimeout(function(){if(rv.hint===h){rv.hint=-1;render();}},3200);
 }
 function revEnd(minimal){
   if(finished)return;
@@ -2263,7 +2288,9 @@ bootGame();
 
 /* ---------- update check (installed web app) ----------
    Reads the version tag from the copy on the server and offers to switch to it. */
-var APP_VER=parseInt(($('#verTag').textContent||'v0').replace(/\D/g,''),10)||0,updBusy=false,updText=null,updLast=0,updSnooze=0;
+var APP_VER=($('#verTag').textContent||'v0').replace(/^v/,''),updBusy=false,updText=null,updLast=0,updSnooze='';
+/* compare dotted versions: 1.0.10 > 1.0.9; old whole-number builds (v32) count as pre-1.0 */
+function verCmp(a,b){a=String(a).split('.');b=String(b).split('.');if(a.length===1&&b.length>1)return -1;if(b.length===1&&a.length>1)return 1;for(var k=0;k<Math.max(a.length,b.length);k++){var x=+a[k]||0,y=+b[k]||0;if(x!==y)return x>y?1:-1;}return 0;}
 $('#trkVer').textContent='Version v'+APP_VER;
 function canUpdate(){return /^https?:$/.test(location.protocol);}
 function checkUpdate(manual){
@@ -2274,8 +2301,8 @@ function checkUpdate(manual){
   if(manual)toast('Checking for updates\u2026',0);
   fetch('index.html?fresh='+Date.now(),{cache:'no-store'}).then(function(r){if(!r.ok)throw new Error(r.status);return r.text();}).then(function(t){
     updBusy=false;
-    var m=t.match(/id="verTag" class="ver">v(\d+)</),v=m?parseInt(m[1],10):0;
-    if(v>APP_VER){updText=t;if(manual||v!==updSnooze)showUpdate(v);}
+    var m=t.match(/id="verTag" class="ver">v(\d+(?:\.\d+)*)</),v=m?m[1]:'0';
+    if(verCmp(v,APP_VER)>0){updText=t;if(manual||v!==updSnooze)showUpdate(v);}
     else if(manual)toast("You're on the latest version (v"+APP_VER+')',0);
   }).catch(function(){updBusy=false;if(manual)toast("Couldn't reach the update server",0);});
 }
@@ -2303,7 +2330,7 @@ function applyUpdate(){
   }).then(go,go);
 }
 $('#updNow').addEventListener('click',applyUpdate);
-$('#updLater').addEventListener('click',function(){updSnooze=+$('#updBar').getAttribute('data-v');$('#updBar').classList.add('hidden');});
+$('#updLater').addEventListener('click',function(){updSnooze=$('#updBar').getAttribute('data-v');$('#updBar').classList.add('hidden');});
 $('#updCheck').addEventListener('click',function(){checkUpdate(true);});
 $('#verTag').addEventListener('click',function(){checkUpdate(true);});
 $('#verTag').setAttribute('title','Check for updates');
