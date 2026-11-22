@@ -318,6 +318,14 @@ var m=document.querySelector('meta[name="theme-color"]');if(m)m.setAttribute('co
     --active-bg:rgba(230,184,92,.16); --active-text:#fff1d0;
   }
   @media (prefers-reduced-motion:reduce){.cell.ring{animation:none}}
+  /* the clock box doubles as a pause button */
+  #timeStat{position:relative;cursor:pointer;-webkit-tap-highlight-color:transparent;transition:transform .1s,border-color .15s}
+  #timeStat:hover{border-color:var(--hover-line)}
+  #timeStat:active{transform:scale(.96)}
+  #timeStat:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+  #timeStat .pz{position:absolute;top:8px;right:8px;width:14px;height:14px;fill:var(--muted);opacity:.8}
+  body.dg #timeStat .pz{fill:var(--wrong)}
+  @media (max-width:360px),(max-height:700px){#timeStat .pz{width:12px;height:12px;top:5px;right:6px}}
   /* ===================== Awards ===================== */
   /* iPhone home-screen app: keep every pop-up card clear of the status bar and home indicator */
   .overlay{box-sizing:border-box;padding:calc(env(safe-area-inset-top,0px) + 12px) calc(env(safe-area-inset-right,0px) + 12px) calc(env(safe-area-inset-bottom,0px) + 12px) calc(env(safe-area-inset-left,0px) + 12px)}
@@ -719,7 +727,7 @@ var m=document.querySelector('meta[name="theme-color"]');if(m)m.setAttribute('co
 
 <div class="app">
   <header>
-    <h1>SUDOKU<span id="verTag" class="ver">v1.2.1</span></h1>
+    <h1>SUDOKU<span id="verTag" class="ver">v1.3.0</span></h1>
     <div class="hdr-btns">
       <button id="themeBtn" class="icon-btn" title="Toggle light/dark">
         <svg class="sun" viewBox="0 0 24 24" width="24" height="24" fill="none" aria-hidden="true">
@@ -778,7 +786,7 @@ var m=document.querySelector('meta[name="theme-color"]');if(m)m.setAttribute('co
   </div>
 
   <div class="stats">
-    <div class="stat"><span class="label" id="stat1Lbl">Time</span><span id="timeVal">00:00</span></div>
+    <div class="stat" id="timeStat" role="button" tabindex="0" title="Pause" aria-label="Pause"><svg class="pz" viewBox="0 0 24 24" aria-hidden="true"><rect x="6.5" y="5" width="4" height="14" rx="1.3"/><rect x="13.5" y="5" width="4" height="14" rx="1.3"/></svg><span class="label" id="stat1Lbl">Time</span><span id="timeVal">00:00</span></div>
     <div class="stat"><span class="label" id="stat2Lbl">Mistakes</span><span id="mistakeVal">0</span></div>
     <div class="stat"><span class="label" id="stat3Lbl">Hints</span><span id="hintVal">3</span></div>
   </div>
@@ -816,7 +824,7 @@ var m=document.querySelector('meta[name="theme-color"]');if(m)m.setAttribute('co
 
 <div id="pauseOverlay" class="overlay hidden">
   <div class="card"><h2>Paused</h2><p>Take a breath.</p>
-    <button class="btn primary" id="resumeBtn">Resume (P)</button></div>
+    <button class="btn primary" id="resumeBtn">Resume</button></div>
 </div>
 
 <div id="endOverlay" class="overlay hidden">
@@ -1000,7 +1008,7 @@ var m=document.querySelector('meta[name="theme-color"]');if(m)m.setAttribute('co
 'use strict';
 window.__sudokuBoot=true;
 var bm=document.getElementById('bootMsg');if(bm)bm.style.display='none';
-var vt=document.getElementById('verTag');if(vt)vt.textContent='v1.2.1';
+var vt=document.getElementById('verTag');if(vt)vt.textContent='v1.3.0';
 
 function $(s){return document.querySelector(s);}
 function cap(s){return s.charAt(0).toUpperCase()+s.slice(1);}
@@ -2449,6 +2457,9 @@ $('#newGameBtn').addEventListener('click',function(){
 $('#againBtn').addEventListener('click',newGame);
 $('#closeEndBtn').addEventListener('click',function(){$('#endOverlay').classList.add('hidden');});
 $('#resumeBtn').addEventListener('click',function(){setPaused(false);});
+$('#timeStat').addEventListener('click',function(){if(finished||(dgMode&&dg&&dg.phase!=='play'))return;setPaused(true);});
+$('#timeStat').addEventListener('keydown',function(e){if(e.key==='Enter'||e.key===' '){e.preventDefault();this.click();}});
+$('#pauseOverlay').addEventListener('click',function(e){if(e.target===this)setPaused(false);});
 $('#undoBtn').addEventListener('click',undo);
 $('#redrawBtn').addEventListener('click',redraw);
 $('#peekBtn').addEventListener('click',togglePeek);
