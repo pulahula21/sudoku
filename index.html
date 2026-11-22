@@ -265,10 +265,10 @@ var m=document.querySelector('meta[name="theme-color"]');if(m)m.setAttribute('co
   .recent-head{display:flex;justify-content:space-between;align-items:baseline;gap:8px;margin:16px 0 8px}
   .recent-head .recent-title{margin:0}
   #recentLegend{font-size:11.5px;color:var(--muted);white-space:nowrap}
-  .trk-tabs{display:grid;grid-template-columns:repeat(6,1fr);gap:4px;padding:4px;margin:0 0 12px;border-radius:12px;background:var(--panel);border:1px solid var(--line)}
+  .trk-tabs{display:grid;grid-template-columns:repeat(7,1fr);gap:4px;padding:4px;margin:0 0 12px;border-radius:12px;background:var(--panel);border:1px solid var(--line)}
   .trk-tabs button{flex:1 1 0;min-width:0;border:none;background:none;color:var(--muted);font:inherit;font-size:12px;font-weight:700;padding:8px 1px;border-radius:9px;cursor:pointer;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
   .trk-tabs button.on{background:var(--active-bg);color:var(--active-text);box-shadow:inset 0 0 0 1px var(--accent)}
-  @media (max-width:480px){.trk-tabs{grid-template-columns:repeat(3,1fr)}}
+  @media (max-width:480px){.trk-tabs{grid-template-columns:repeat(4,1fr)}}
   .trk-tabs button:focus-visible{outline:2px solid var(--accent);outline-offset:1px}
   #statsTable td.kl{text-align:left;color:var(--muted)}
   #statsTable td.kv{text-align:right;font-weight:700}
@@ -318,6 +318,61 @@ var m=document.querySelector('meta[name="theme-color"]');if(m)m.setAttribute('co
     --active-bg:rgba(230,184,92,.16); --active-text:#fff1d0;
   }
   @media (prefers-reduced-motion:reduce){.cell.ring{animation:none}}
+  /* ===================== Mountain Goat mode ===================== */
+@font-face{font-family:"Bree Serif";src:url(data:font/woff2;base64,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) format("woff2");font-weight:400;font-display:swap}
+  #gtLine{display:none;align-items:center;justify-content:space-between;gap:10px;font-size:11.5px;color:var(--muted);padding-top:6px;min-height:20px}
+  body.gt #gtLine{display:flex}
+  #gtInfo{min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+  #gtInfo.warn{color:var(--goat-ring);font-weight:700}
+  .gt-r{display:flex;align-items:center;gap:8px;flex:none}
+  #gtLeaps{font-weight:700;color:var(--text)}
+  #gtRuleBtn{flex:none;background:none;border:1px solid var(--line-strong);border-radius:999px;color:var(--text);font:inherit;font-size:11px;padding:2px 9px;cursor:pointer}
+  #gtRuleBtn:hover{color:var(--accent)}
+  body.gt #board{position:relative}
+  body.gt .cell.reach{background:var(--reach)}
+  body.gt .cell.reach.unit,body.gt .cell.reach.peer{background:var(--reach)}
+  body.gt .cell.goat{box-shadow:inset 0 0 0 2px var(--goat-ring)}
+  body.gt .cell.far.selected{box-shadow:inset 0 0 0 2px var(--goat-ring);background-image:repeating-linear-gradient(135deg,transparent 0 5px,var(--reach) 5px 7px)}
+  #goatTok{display:none;position:absolute;width:11.111%;height:11.111%;pointer-events:none;z-index:3;transition:left .22s ease,top .22s ease}
+  body.gt #goatTok{display:block}
+  #goatTok span{position:absolute;left:-1%;top:-3%;font-size:5.8cqi;line-height:1;filter:drop-shadow(0 1px 1px rgba(0,0,0,.35));transform-origin:50% 100%}
+  #goatTok.leap{transition:left .5s cubic-bezier(.3,0,.3,1),top .5s cubic-bezier(.3,0,.3,1)}
+  #goatTok.leap span{animation:goatleap .5s ease-in-out}
+  #goatTok.step span{animation:goatstep .25s ease-out}
+  @keyframes goatleap{0%{transform:translateY(0) scale(1)}45%{transform:translateY(-120%) scale(1.5)}100%{transform:translateY(0) scale(1)}}
+  @keyframes goatstep{0%{transform:translateY(0)}50%{transform:translateY(-30%)}100%{transform:translateY(0)}}
+  @media (prefers-reduced-motion:reduce){#goatTok,#goatTok.leap{transition:none}#goatTok span{animation:none!important}}
+  body.gt{font-family:"Bree Serif",Georgia,"Times New Roman",serif}
+  body.gt .blob{display:none}
+  body.gt h1{letter-spacing:.22em}
+  :root[data-theme="light"] body.gt{
+    background:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1440 520'%3E%3Cpolygon fill='%23c6d7e6' points='0,330 120,250 230,300 360,190 470,270 600,160 720,250 850,140 980,260 1100,180 1230,270 1340,210 1440,260 1440,520 0,520'/%3E%3Cpolygon fill='%23ffffff' fill-opacity='.9' points='600,160 574,193 590,186 603,197 616,184 630,194'/%3E%3Cpolygon fill='%23ffffff' fill-opacity='.9' points='850,140 820,178 838,170 852,182 867,167 882,178'/%3E%3Cpolygon fill='%23ffffff' fill-opacity='.9' points='360,190 338,218 352,212 364,221 376,210 386,218'/%3E%3Cpolygon fill='%23ffffff' fill-opacity='.9' points='1100,180 1080,206 1093,200 1104,209 1115,199 1124,206'/%3E%3Cpolygon fill='%23a9c2a2' points='0,420 160,330 300,400 470,300 640,410 820,320 1000,420 1180,330 1440,400 1440,520 0,520'/%3E%3Cpolygon fill='%2394b28c' points='0,470 220,410 420,465 640,420 880,470 1120,425 1440,465 1440,520 0,520'/%3E%3C/svg%3E") center bottom/max(100vw,1000px) auto no-repeat,linear-gradient(180deg,#d6e8f5 0%,#eef4f1 55%,#e7efe2 100%);
+    background-color:#e9f1ea;
+    --text:#22303a; --muted:#5d6e76; --accent:#3b7a56; --violet:#a0522d; --wrong:#c0392b; --good:#3b7d4f;
+    --panel:rgba(255,255,255,.7); --card:rgba(252,253,251,.97);
+    --line:rgba(40,60,70,.15); --line-strong:rgba(40,60,70,.45); --hover-line:rgba(59,122,86,.5);
+    --board-bg:#fbfdfb; --board-shadow:0 16px 40px rgba(40,70,90,.18);
+    --given:#22303a; --entry:#2d6490; --note:#6b7a80;
+    --cell-unit:rgba(59,122,86,.07); --cell-peer:rgba(59,122,86,.18); --peer-text:#1d4a31;
+    --cell-sel:rgba(59,122,86,.2); --sel-ring:rgba(59,122,86,.8);
+    --primary-bg:linear-gradient(90deg,rgba(59,122,86,.16),rgba(45,100,144,.16));
+    --active-bg:rgba(59,122,86,.13); --active-text:#1d4a31; --overlay:rgba(233,241,234,.74);
+    --reach:rgba(226,160,48,.2); --goat-ring:#b8741f;
+  }
+  :root:not([data-theme="light"]) body.gt{
+    background:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1440 520'%3E%3Cpolygon fill='%2324344c' points='0,330 120,250 230,300 360,190 470,270 600,160 720,250 850,140 980,260 1100,180 1230,270 1340,210 1440,260 1440,520 0,520'/%3E%3Cpolygon fill='%239fb3cc' fill-opacity='.45' points='600,160 574,193 590,186 603,197 616,184 630,194'/%3E%3Cpolygon fill='%239fb3cc' fill-opacity='.45' points='850,140 820,178 838,170 852,182 867,167 882,178'/%3E%3Cpolygon fill='%239fb3cc' fill-opacity='.45' points='360,190 338,218 352,212 364,221 376,210 386,218'/%3E%3Cpolygon fill='%239fb3cc' fill-opacity='.45' points='1100,180 1080,206 1093,200 1104,209 1115,199 1124,206'/%3E%3Cpolygon fill='%231a2639' points='0,420 160,330 300,400 470,300 640,410 820,320 1000,420 1180,330 1440,400 1440,520 0,520'/%3E%3Cpolygon fill='%23131c2b' points='0,470 220,410 420,465 640,420 880,470 1120,425 1440,465 1440,520 0,520'/%3E%3C/svg%3E") center bottom/max(100vw,1000px) auto no-repeat,url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='320' height='220'%3E%3Cg fill='%23ffffff'%3E%3Ccircle cx='20' cy='30' r='1' fill-opacity='.7'/%3E%3Ccircle cx='90' cy='80' r='.8' fill-opacity='.5'/%3E%3Ccircle cx='150' cy='20' r='1.2' fill-opacity='.8'/%3E%3Ccircle cx='210' cy='110' r='.8' fill-opacity='.45'/%3E%3Ccircle cx='270' cy='50' r='1' fill-opacity='.6'/%3E%3Ccircle cx='60' cy='160' r='.9' fill-opacity='.5'/%3E%3Ccircle cx='240' cy='190' r='1.1' fill-opacity='.6'/%3E%3Ccircle cx='180' cy='150' r='.7' fill-opacity='.4'/%3E%3C/g%3E%3C/svg%3E"),linear-gradient(180deg,#0b1220 0%,#121b2e 60%,#141d2e 100%);
+    background-color:#0f1626;
+    --text:#e8eef2; --muted:#9fb0bd; --accent:#8fd3a8; --violet:#e0a96d; --good:#9fd8a8;
+    --panel:rgba(255,255,255,.05); --card:rgba(16,24,38,.96);
+    --line:rgba(160,190,215,.14); --line-strong:rgba(160,190,215,.4); --hover-line:rgba(143,211,168,.5);
+    --board-bg:rgba(12,18,30,.84);
+    --given:#e6edf2; --entry:#9cc7ff; --note:#9aa9b4;
+    --cell-unit:rgba(143,211,168,.06); --cell-peer:rgba(143,211,168,.15); --peer-text:#e3fff0;
+    --cell-sel:rgba(143,211,168,.2); --sel-ring:rgba(143,211,168,.8);
+    --primary-bg:linear-gradient(90deg,rgba(143,211,168,.18),rgba(156,199,255,.18));
+    --active-bg:rgba(143,211,168,.15); --active-text:#e3fff0;
+    --reach:rgba(240,184,90,.15); --goat-ring:#f0b85a;
+  }
   /* ===================== Reverse mode ===================== */
   #removeBtn,#finishBtn{display:none}
   body.rev #finishBtn{display:flex}
@@ -622,7 +677,7 @@ var m=document.querySelector('meta[name="theme-color"]');if(m)m.setAttribute('co
 
 <div class="app">
   <header>
-    <h1>SUDOKU<span id="verTag" class="ver">v1.0.1</span></h1>
+    <h1>SUDOKU<span id="verTag" class="ver">v1.1.0</span></h1>
     <div class="hdr-btns">
       <button id="themeBtn" class="icon-btn" title="Toggle light/dark">
         <svg class="sun" viewBox="0 0 24 24" width="24" height="24" fill="none" aria-hidden="true">
@@ -664,6 +719,7 @@ var m=document.querySelector('meta[name="theme-color"]');if(m)m.setAttribute('co
       <option value="dungeon">Dungeon</option>
       <option value="reverse">Reverse</option>
       <option value="melody">Melody</option>
+      <option value="goat">Goat</option>
     </select>
     <select id="diffSel" aria-label="Difficulty">
       <option value="easy">Easy</option>
@@ -687,7 +743,8 @@ var m=document.querySelector('meta[name="theme-color"]');if(m)m.setAttribute('co
     <button id="mjRuleLine" type="button">Place tiles from your hand &middot; score melds &middot; <u>Rules</u></button>
     <div id="dgLine"><span id="dgMods"></span><div id="dgClock" hidden><i></i></div><span id="dgClockTxt"></span><button id="dgRuleBtn" type="button">Rules</button></div>
     <div id="rvLine"><span id="rvInfo"></span><button id="rvRuleBtn" type="button">Rules</button></div>
-    <div id="melLine"><span>&#9835; Every number is a note</span><span class="mel-btns"><button id="melPlayBtn" type="button"><span id="melPlayLbl">Play</span></button><button id="melRuleBtn" type="button">Rules</button></span></div></div>
+    <div id="melLine"><span>&#9835; Every number is a note</span><span class="mel-btns"><button id="melPlayBtn" type="button"><span id="melPlayLbl">Play</span></button><button id="melRuleBtn" type="button">Rules</button></span></div>
+    <div id="gtLine"><span id="gtInfo"></span><span class="gt-r"><span id="gtLeaps"></span><button id="gtRuleBtn" type="button">Rules</button></span></div></div>
   <div class="actions">
     <button class="btn" id="undoBtn" title="Undo (U)" disabled>
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 14L4 9l5-5"/><path d="M4 9h10.5a5.5 5.5 0 0 1 0 11H11"/></svg><span class="lbl">Undo</span></button>
@@ -738,6 +795,7 @@ var m=document.querySelector('meta[name="theme-color"]');if(m)m.setAttribute('co
       <button type="button" data-m="dungeon" role="tab">Dungeon</button>
       <button type="button" data-m="reverse" role="tab">Reverse</button>
       <button type="button" data-m="melody" role="tab">Melody</button>
+      <button type="button" data-m="goat" role="tab">Goat</button>
     </div>
     <table id="statsTable"></table>
     <div class="recent-head"><p class="recent-title" id="recentTitle">Recent Games</p><span id="recentLegend"></span></div>
@@ -798,6 +856,21 @@ var m=document.querySelector('meta[name="theme-color"]');if(m)m.setAttribute('co
     </table>
     <p>Melds count consecutive correct placements, in any cells. A wrong tile breaks the streak and stays in your hand. Undo restores your score and hand, but it can&rsquo;t reroll a draw.</p>
     <button class="btn primary" id="mjRulesBtn">Got it</button>
+  </div>
+</div>
+<div id="gtRules" class="overlay hidden">
+  <div class="card rules-card">
+    <h2>Mountain Goat</h2>
+    <p>Your goat starts in the valley at the bottom of the board. It can only reach the eight cells around it, so you solve the puzzle along a trail instead of wherever is easiest.</p>
+    <table class="rules-pts">
+      <tr><td><b>Climb</b></td><td class="txt">Fill a highlighted cell next to your goat. A correct number moves the goat onto it.</td></tr>
+      <tr><td><b>Leap</b></td><td class="txt">A number in any other cell is a leap and costs a bale of hay. Out of hay, the goat still leaps but it counts as a rescue.</td></tr>
+      <tr><td><b>Hay</b></td><td class="txt">You start with a few bales. Every box you finish earns another.</td></tr>
+      <tr><td><b>Snort</b></td><td class="txt">A wrong number is never written. The goat snorts, stays put and it counts as a mistake.</td></tr>
+      <tr><td><b>Hint</b></td><td class="txt">Fills a cell next to the goat, or gives it a free lift when it is boxed in.</td></tr>
+    </table>
+    <p>Plan your route: a cell you can solve now may be across the board. Notes work anywhere and cost nothing. Finish without a rescue to be sure-footed.</p>
+    <button class="btn primary" id="gtRulesBtn">Got it</button>
   </div>
 </div>
 <div id="melRules" class="overlay hidden">
@@ -871,7 +944,7 @@ var m=document.querySelector('meta[name="theme-color"]');if(m)m.setAttribute('co
 'use strict';
 window.__sudokuBoot=true;
 var bm=document.getElementById('bootMsg');if(bm)bm.style.display='none';
-var vt=document.getElementById('verTag');if(vt)vt.textContent='v1.0.1';
+var vt=document.getElementById('verTag');if(vt)vt.textContent='v1.1.0';
 
 function $(s){return document.querySelector(s);}
 function cap(s){return s.charAt(0).toUpperCase()+s.slice(1);}
@@ -1079,6 +1152,7 @@ var mjMode=store.getItem('sudoku.mode')==='mahjong';
 var catMode=store.getItem('sudoku.mode')==='cat',lastNap=-1;
 var userDiff=null; /* the player's own difficulty, kept while Dungeon drives the selector */
 var melMode=store.getItem('sudoku.mode')==='melody';
+var gtMode=store.getItem('sudoku.mode')==='goat',gt={pos:-1,hay:0,leaps:0,rescues:0,top:false},gtFx='';
 var revMode=store.getItem('sudoku.mode')==='reverse',rv={},revDigit=0,finishArmed=false,finishTm=null;
 var dgMode=store.getItem('sudoku.mode')==='dungeon',dg=null,peekArm=false,ghostBox=-1,abandonArmed=false,abandonTm=null;
 var hand=[],selectedTile=-1,score=0,run=[],melds=0,rngState=1,lastDrawn=-1,HAND_SIZE=5;
@@ -1148,6 +1222,11 @@ function render(){
       if(rv.altSrc===i)cls+=' altsrc';
       if(rv.hint===i)cls+=' hintme';
     }
+    if(gtMode&&gt.pos>=0){
+      if(i===gt.pos)cls+=' goat';
+      if(!v&&!finished&&gtNear(i))cls+=' reach';
+      else if(!v&&i===sel&&!finished)cls+=' far';
+    }
     if(ghostBox>=0&&BOX[i]===ghostBox&&!v){cls+=' ghost';el.setAttribute('data-ghost',solution[i]);}
     if(puzzle[i])cls+=' given';
     if(wrongSet[i])cls+=' wrong';
@@ -1179,6 +1258,7 @@ function render(){
       }else el.textContent='';
     }
   }
+  if(gtMode)gtDraw();
 }
 function updatePad(){
   if(revMode){revPad();return;}
@@ -1247,6 +1327,7 @@ function doAutoComplete(){
     openUnits=Object.keys(ur).length+Object.keys(uc).length+Object.keys(ub).length;
   }
   for(var n=0;n<list.length;n++){var o=list[n];setVal(o.i,o.v);notes[o.i]=0;clearPeerNotes(o.i,o.v);}
+  if(gtMode){gt.pos=list[0].i;gtFx='leap';sfx.bleat(5);}
   if(mjMode){ /* tile + unit points for the filled cells; no meld bonuses */
     var pts=list.length*PTS.tile+openUnits*PTS.unit;
     hand=[];selectedTile=-1;selected=-1;run=[];
@@ -1278,7 +1359,7 @@ function setPaused(p){
 }
 
 /* ---------- game actions ---------- */
-function select(i){selected=i;hlDigit=0;render();updatePad();if(melMode&&grid[i]&&!wrongSet[i])melNote(grid[i]);}
+function select(i){selected=i;hlDigit=0;render();updatePad();if(gtMode)gtLine();if(melMode&&grid[i]&&!wrongSet[i])melNote(grid[i]);}
 /* A cell is locked once it holds its correct value (givens included). A player's correct entry
    can't be overwritten by another number; pressing its own number again (or Undo) clears it. */
 function isLocked(i){return !!puzzle[i]||(grid[i]!==0&&grid[i]===solution[i]);}
@@ -1290,7 +1371,7 @@ function clearPeerNotes(i,d){
 /* ---------- undo (board + notes + wrong marks; mistakes stay counted, hints stay spent) ---------- */
 function snapshot(){
   undoStack.push({g:grid.slice(),n:notes.slice(),w:Object.assign({},wrongSet),
-    h:hand.slice(),sc:score,rn:run.slice(),ml:melds,rs:rngState});
+    h:hand.slice(),sc:score,rn:run.slice(),ml:melds,rs:rngState,gt:Object.assign({},gt)});
   if(undoStack.length>UNDO_MAX)undoStack.shift();
   syncUndo();
 }
@@ -1301,6 +1382,7 @@ function undo(){
   grid=u.g;notes=u.n;wrongSet=u.w;
   hand=u.h;score=u.sc;run=u.rn;melds=u.ml;rngState=u.rs;selectedTile=-1;lastDrawn=-1; /* RNG restored too: undo can't re-roll a draw */
   correct=0;for(var i=0;i<81;i++)if(grid[i]&&grid[i]===solution[i])correct++;
+  if(gtMode&&u.gt){gt=u.gt;gtFx='step';updateStat3();}
   hlDigit=0;sfx.note();render();updatePad();syncUndo();
   if(mjMode){renderHand();updateStat3();}
 }
@@ -1316,12 +1398,18 @@ function placeValue(i,d){ /* caller takes the snapshot */
     mistakes++;shake(i);render();damage(1);
     return;
   }
+  if(gtMode&&d!==solution[i]){ /* Mountain Goat: a wrong number is never written; the goat snorts */
+    undoStack.pop();syncUndo();
+    mistakes++;setMistakeDisplay();shake(i);sfx.snort();render();
+    return;
+  }
   hlDigit=0;
   setVal(i,d);notes[i]=0;delete wrongSet[i];clearPeerNotes(i,d);
   var ok=d===solution[i];
+  if(ok&&gtMode)gtArrive(i,false);
   if(!ok){mistakes++;wrongSet[i]=1;setMistakeDisplay();} /* counted, but never ends the game */
   render();updatePad();
-  if(ok){if(catMode)sfx.meow(d);else if(melMode)melNote(d);else sfx.place();pop(i);}else{if(catMode)sfx.hiss();else if(melMode)melSour(d);else sfx.error();shake(i);}
+  if(ok){if(catMode)sfx.meow(d);else if(melMode)melNote(d);else if(!gtMode)sfx.place();pop(i);}else{if(catMode)sfx.hiss();else if(melMode)melSour(d);else sfx.error();shake(i);}
   if(ok&&melMode&&!isComplete())melUnits(i);
   if(!ok&&catMode){ /* show which cats object: wheel neighbours next door, or the same cat already in the unit */
     var hit=[],q,o=ORTH[i],k;
@@ -1339,7 +1427,7 @@ function placeOrNote(d){
   var i=selected;
   if(notesMode&&!grid[i]){toggleNote(i,d);return;}
   if(puzzle[i]){hlDigit=(d===grid[i])?0:d;render();return;} /* givens: just highlight */
-  if(grid[i]===d){snapshot();clearCell(i);return;}         /* same number again removes it */
+  if(grid[i]===d&&!gtMode){snapshot();clearCell(i);return;} /* same number again removes it */
   if(isLocked(i)){hlDigit=d;render();return;}               /* correct entry: highlight instead of overwrite */
   snapshot();placeValue(i,d);
 }
@@ -1347,6 +1435,7 @@ function erase(){ /* keyboard Backspace/Delete */
   if(revMode){if(selected>=0)revRemove(selected);return;}
   if(finished||selected<0||puzzle[selected])return;
   if(!grid[selected]&&!notes[selected])return;
+  if(gtMode&&grid[selected])return;
   snapshot();clearCell(selected);
 }
 
@@ -1365,7 +1454,7 @@ function quickTap(i){
     return;
   }
   if(grid[i]===d){ /* tapping a cell holding the picked number removes it (not givens) */
-    if(!puzzle[i]){snapshot();clearCell(i);}
+    if(!puzzle[i]&&!gtMode){snapshot();clearCell(i);}
     return;
   }
   if(grid[i]&&isLocked(i))return; /* a different correct number stays put */
@@ -1384,6 +1473,7 @@ function hint(){
   if(revMode){revHint();return;}
   if(hintsLeft<=0){if(selected>=0)shake(selected);sfx.error();if(dgMode)toast('No hint scrolls left',0);return;}
   var i=(selected>=0&&!grid[selected])?selected:-1;
+  if(gtMode){var near=gtOpen();i=(i>=0&&gtNear(i))?i:(near.length?near[Math.floor(Math.random()*near.length)]:i);}
   if(i<0){var e=[];for(var k=0;k<81;k++)if(!grid[k])e.push(k);i=e.length?e[Math.floor(Math.random()*e.length)]:-1;}
   if(i<0)return;
   snapshot();
@@ -1391,7 +1481,8 @@ function hint(){
   setVal(i,solution[i]);notes[i]=0;delete wrongSet[i];clearPeerNotes(i,grid[i]);
   if(mjMode){run=[];selectedTile=-1;replaceDead();renderHand();}
   if(dgMode)dgCorrect(i);
-  updateStat3();if(catMode)sfx.meow(grid[i]);else if(melMode)melNote(grid[i]);else sfx.place();render();updatePad();pop(i);
+  if(gtMode)gtArrive(i,true);
+  updateStat3();if(catMode)sfx.meow(grid[i]);else if(melMode)melNote(grid[i]);else if(!gtMode)sfx.place();render();updatePad();pop(i);
   if(melMode&&!isComplete())melUnits(i);
   if(isComplete())endGame();
 }
@@ -1544,6 +1635,7 @@ function toast(msg,pts){
 function updateStat3(){
   if(revMode){$('#stat3Lbl').textContent='Clues';$('#hintVal').textContent=revClues();$('#hintLbl').textContent='Hint ('+hintsLeft+')';return;}
   if(dgMode){dgStats();return;}
+  if(gtMode){$('#stat3Lbl').textContent='Hay';$('#hintVal').textContent=gt.hay;$('#hintLbl').textContent='Hint ('+hintsLeft+')';gtLine();return;}
   if(mjMode){
     $('#stat3Lbl').textContent='Score';$('#hintVal').textContent=score.toLocaleString();
     $('#hintLbl').textContent='Hint ('+hintsLeft+')';
@@ -1579,7 +1671,7 @@ function buildWheel(){ /* the nine cats in a ring, so the wrap from 9 back to 1 
 }
 function showCatRules(){buildWheel();$('#catRules').classList.remove('hidden');}
 var RULES={cat:{id:'catRules',key:'sudoku.catRules',show:function(){showCatRules();}},
-  mahjong:{id:'mjRules',key:'sudoku.mjRules'},reverse:{id:'rvRules',key:'sudoku.rvRules'},melody:{id:'melRules',key:'sudoku.melRules'},dungeon:{id:'dgRules',key:'sudoku.dgRules'}};
+  mahjong:{id:'mjRules',key:'sudoku.mjRules'},reverse:{id:'rvRules',key:'sudoku.rvRules'},melody:{id:'melRules',key:'sudoku.melRules'},dungeon:{id:'dgRules',key:'sudoku.dgRules'},goat:{id:'gtRules',key:'sudoku.gtRules'}};
 function showRules(m){var r=RULES[m];if(!r)return;if(r.show)r.show();else $('#'+r.id).classList.remove('hidden');}
 function rulesOnce(m){ /* first visit to a mode opens its rules */
   var r=RULES[m];if(!r||store.getItem(r.key)==='1')return;
@@ -1587,7 +1679,7 @@ function rulesOnce(m){ /* first visit to a mode opens its rules */
 }
 function setMode(m){
   if(m!=='dungeon'&&userDiff!==null){$('#diffSel').value=userDiff;userDiff=null;}
-  catMode=(m==='cat');dgMode=(m==='dungeon');revMode=(m==='reverse');melMode=(m==='melody');
+  catMode=(m==='cat');dgMode=(m==='dungeon');revMode=(m==='reverse');melMode=(m==='melody');gtMode=(m==='goat');
   mjMode=(m==='mahjong');store.setItem('sudoku.mode',m);
   $('#modeSel').value=m;
   if((mjMode||revMode)&&quickMode)setQuick(false);
@@ -1597,6 +1689,103 @@ function setMode(m){
   rulesOnce(m);
 }
 
+
+/* ===================== Mountain Goat mode ===================== */
+/* The goat stands on one cell and can only reach the eight around it. A correct number in reach
+   moves it there; anywhere else is a leap that costs hay (or a rescue once the hay runs out). */
+var GOAT=String.fromCodePoint(0x1F410),GT_HAY={easy:3,medium:3,hard:4,expert:5};
+var NB8=[];(function(){for(var i=0;i<81;i++){var r=ROW[i],c=COL[i],a=[];
+  for(var dr=-1;dr<=1;dr++)for(var dc=-1;dc<=1;dc++){if(!dr&&!dc)continue;var rr=r+dr,cc=c+dc;if(rr>=0&&rr<9&&cc>=0&&cc<9)a.push(rr*9+cc);}
+  NB8.push(a);}})();
+function gtNear(i){return i===gt.pos||NB8[gt.pos].indexOf(i)>=0;}
+function gtOpen(){var a=[],p=gt.pos;if(p<0)return a;if(!grid[p])a.push(p);NB8[p].forEach(function(q){if(!grid[q])a.push(q);});return a;}
+function gtSetup(){ /* start in the valley: a bottom-row clue with the most open ground around it */
+  var best=-1,bs=-1;
+  for(var c=0;c<9;c++){var i=72+c,sc=0;NB8[i].forEach(function(q){if(!puzzle[q])sc++;});
+    sc=sc*2+(puzzle[i]?20:0)+Math.random();if(sc>bs){bs=sc;best=i;}}
+  gt={pos:best,hay:GT_HAY[diff]||3,leaps:0,rescues:0,top:false};gtFx='';
+}
+function gtArrive(i,free){
+  var far=!gtNear(i),msg='';
+  if(far&&!free){
+    gt.leaps++;
+    if(gt.hay>0){gt.hay--;msg='Leap! Hay \u22121';}else{gt.rescues++;msg='Out of hay \u00B7 rescue!';}
+    gtFx='leap';sfx.goatLeap();
+  }else{gtFx=far?'leap':'step';sfx.bleat(grid[i]);}
+  gt.pos=i;
+  if(ROW[i]===0&&!gt.top){gt.top=true;if(!msg)msg='Summit view!';}
+  var b=BOX[i],done=true;
+  for(var k=0;k<9;k++){var q=BOXCELLS[b][k];if(grid[q]!==solution[q]){done=false;break;}}
+  if(done&&correct<81){gt.hay++;msg='Box cleared \u00B7 +1 hay!';sfx.goatBox();}
+  if(msg)toast(msg,0);
+  updateStat3();
+}
+function gtDraw(){
+  var t=document.getElementById('goatTok');
+  if(!t){t=document.createElement('div');t.id='goatTok';t.innerHTML='<span>'+GOAT+'</span>';boardEl.appendChild(t);}
+  if(gt.pos<0)return;
+  var l=(COL[gt.pos]*100/9).toFixed(3)+'%',tp=(ROW[gt.pos]*100/9).toFixed(3)+'%';
+  if(gtFx){t.className='';void t.offsetWidth;t.className=gtFx;gtFx='';}
+  if(t.style.left!==l)t.style.left=l;if(t.style.top!==tp)t.style.top=tp;
+  gtLine();
+}
+function gtLine(){
+  if(!gtMode)return;
+  var info=$('#gtInfo'),txt,warn=false;
+  if(finished)txt=gt.rescues?'Made it to the top':'Sure-footed all the way';
+  else if(!quickMode&&selected>=0&&!grid[selected]&&!gtNear(selected)){txt='Out of reach \u00B7 a number here is a leap ('+(gt.hay?'1 hay':'rescue')+')';warn=true;}
+  else if(!gtOpen().length){txt='Boxed in! Your next number is a leap';warn=true;}
+  else txt=GOAT+' Fill a highlighted cell to climb';
+  info.textContent=txt;info.classList.toggle('warn',warn);
+  $('#gtLeaps').textContent=gt.leaps+(gt.leaps===1?' leap':' leaps');
+}
+/* ----- goat voices, synthesized ----- */
+/* Bleat: a buzzy voice through two vowel formants, trembling about 16 times a second */
+sfx.bleat=function(d,delay,len){
+  var c=this.ready();if(!c)return;
+  try{
+    var t=c.currentTime+(delay||0),f=330+(d||5)*22,L=len||.55;
+    var o=c.createOscillator(),vib=c.createOscillator(),vd=c.createGain(),trem=c.createGain(),td=c.createGain();
+    var f1=c.createBiquadFilter(),f2=c.createBiquadFilter(),mix=c.createGain(),g=c.createGain();
+    o.type='sawtooth';o.frequency.setValueAtTime(f*1.08,t);o.frequency.linearRampToValueAtTime(f*.94,t+L);
+    vib.frequency.value=15+Math.random()*3;vd.gain.value=f*.035;vib.connect(vd).connect(o.frequency);
+    trem.gain.value=.65;td.gain.value=.35;vib.connect(td).connect(trem.gain);
+    f1.type='bandpass';f1.frequency.value=850;f1.Q.value=3;f2.type='bandpass';f2.frequency.value=2300;f2.Q.value=5;
+    mix.gain.value=1;
+    o.connect(trem);trem.connect(f1).connect(mix);trem.connect(f2).connect(mix);
+    g.gain.setValueAtTime(.0001,t);g.gain.exponentialRampToValueAtTime(.5,t+.04);g.gain.setValueAtTime(.5,t+L*.6);g.gain.exponentialRampToValueAtTime(.001,t+L);
+    mix.connect(g).connect(c.destination);
+    o.start(t);vib.start(t);o.stop(t+L+.05);vib.stop(t+L+.05);
+  }catch(e){}
+};
+/* Snort: a short puff of breath noise with a low grunt */
+sfx.snort=function(){
+  var c=this.ready();if(!c)return;
+  try{
+    var t=c.currentTime,n=this.noise(c),bp=c.createBiquadFilter(),g=c.createGain();
+    bp.type='bandpass';bp.frequency.setValueAtTime(700,t);bp.frequency.linearRampToValueAtTime(350,t+.18);bp.Q.value=1.2;
+    g.gain.setValueAtTime(.0001,t);g.gain.exponentialRampToValueAtTime(.5,t+.02);g.gain.exponentialRampToValueAtTime(.001,t+.2);
+    n.connect(bp).connect(g).connect(c.destination);n.start(t);n.stop(t+.22);
+    this.tone(95,.16,'sawtooth',.12);
+  }catch(e){}
+};
+sfx.goatLeap=function(){
+  var c=this.ready();if(!c)return;
+  try{var t=c.currentTime,o=c.createOscillator(),g=c.createGain();
+    o.type='sine';o.frequency.setValueAtTime(300,t);o.frequency.exponentialRampToValueAtTime(1100,t+.22);
+    g.gain.setValueAtTime(.15,t);g.gain.exponentialRampToValueAtTime(.001,t+.25);
+    o.connect(g).connect(c.destination);o.start(t);o.stop(t+.27);}catch(e){}
+  this.bleat(7,.2,.45);
+};
+/* Box finished: a cowbell clank and two goats answering each other */
+sfx.goatBox=function(){
+  this.tone(540,.5,'square',.05,.05);this.tone(800,.4,'triangle',.08,.05);
+  this.bleat(4,.25,.5);this.bleat(8,.7,.45);
+};
+sfx.goatWin=function(){
+  var a=this;[5,9,3,7].forEach(function(d,i){a.bleat(d,i*.3,.5);});
+  [0,.35,.7].forEach(function(x){a.tone(540,.4,'square',.04,x);a.tone(800,.35,'triangle',.07,x);});
+};
 
 /* ===================== Melody mode ===================== */
 /* Nine numbers, nine notes of a C major pentatonic scale across two octaves:
@@ -1830,7 +2019,7 @@ function dgSetupFloor(){ /* called from newGame once the board exists */
 }
 function applyModeUI(){
   var b=document.body;
-  b.classList.toggle('mj',mjMode);b.classList.toggle('cat',catMode);b.classList.toggle('dg',dgMode);b.classList.toggle('rev',revMode);b.classList.toggle('mel',melMode);
+  b.classList.toggle('mj',mjMode);b.classList.toggle('cat',catMode);b.classList.toggle('dg',dgMode);b.classList.toggle('rev',revMode);b.classList.toggle('mel',melMode);b.classList.toggle('gt',gtMode);
   $('#diffSel').disabled=dgMode;
   if(dgMode){b.setAttribute('data-depth',depthOf(dg.floor).k);document.documentElement.setAttribute('data-theme','dark');}
   else if(b.hasAttribute('data-depth')){b.removeAttribute('data-depth');restoreTheme();}
@@ -2016,7 +2205,7 @@ function loadStatsRaw(){
   return defStats();
 }
 
-var REC_MODES=['classic','mahjong','cat','dungeon','reverse','melody'];
+var REC_MODES=['classic','mahjong','cat','dungeon','reverse','melody','goat'];
 function loadStats(){ /* adds per-mode recent lists, migrating the old shared list once */
   var s=loadStatsRaw();
   if(!s.rec){
@@ -2039,6 +2228,12 @@ function pushRec(s,m,e){s.rec[m].unshift(e);s.rec[m]=s.rec[m].slice(0,10);}funct
     x.p++;x.best=Math.max(x.best||0,score);
     x.sc=(x.sc||0)+score;x.n=(x.n||0)+1;x.ms=(x.ms||0)+ms; /* averages count from this version on */
     pushRec(s,'mahjong',{d:diff,ms:ms,mist:mistakes,h:hintMode,sc:score});
+  }else if(gtMode){
+    s.goat=s.goat||{};x=s.goat[diff]=s.goat[diff]||{p:0,ms:0,mist:0,lp:0};
+    x.p++;x.ms+=ms;x.mist+=mistakes;x.lp+=gt.leaps;
+    x.fast=x.fast?Math.min(x.fast,ms):ms;x.few=x.few==null?gt.leaps:Math.min(x.few,gt.leaps);
+    if(!gt.rescues)x.sure=(x.sure||0)+1;
+    pushRec(s,'goat',{d:diff,ms:ms,mist:mistakes,h:hintMode,lp:gt.leaps,rs:gt.rescues});
   }else{
     var key=catMode?'cat':melMode?'melody':'classic';
     if(catMode){s.cat=s.cat||{};x=s.cat[diff]=s.cat[diff]||{p:0,ms:0,mist:0};}
@@ -2050,7 +2245,7 @@ function pushRec(s,m,e){s.rec[m].unshift(e);s.rec[m]=s.rec[m].slice(0,10);}funct
   }
   store.setItem(STATS_KEY,JSON.stringify(s));
 }var trkTab=null;
-function curModeKey(){return mjMode?'mahjong':catMode?'cat':dgMode?'dungeon':revMode?'reverse':melMode?'melody':'classic';}
+function curModeKey(){return mjMode?'mahjong':catMode?'cat':dgMode?'dungeon':revMode?'reverse':melMode?'melody':gtMode?'goat':'classic';}
 function renderTracker(tab){
   trkTab=tab||trkTab||curModeKey();
   var s=loadStats(),diffs=['easy','medium','hard','expert'],D='\u2014',html='',tb=$('#statsTable');
@@ -2066,6 +2261,14 @@ function renderTracker(tab){
       html+='<tr><td class="mode">'+cap(m)+'</td><td>'+d.p+'</td><td>'+(d.p?fmt(d.ms/d.p):D)+'</td><td>'+(d.fast?fmt(d.fast):D)+'</td><td>'+(d.p?((d.mist||0)/d.p).toFixed(1):D)+'</td></tr>';
     });
     html+='<tr class="total"><td class="mode">All</td><td>'+tp+'</td><td>'+(tp?fmt(tms/tp):D)+'</td><td>'+(tfast?fmt(tfast):D)+'</td><td>'+(tp?(tmist/tp).toFixed(1):D)+'</td></tr>';
+  }else if(trkTab==='goat'){
+    var gs=s.goat||{},tp4=0,tf4=0,tl4=0,tw4=-1;
+    html='<tr><th>Difficulty</th><th>Games</th><th>Best Time</th><th>Avg Leaps</th><th>Fewest</th></tr>';
+    diffs.forEach(function(m){
+      var x=gs[m]||{p:0};tp4+=x.p;tl4+=x.lp||0;if(x.fast)tf4=tf4?Math.min(tf4,x.fast):x.fast;if(x.few!=null)tw4=tw4<0?x.few:Math.min(tw4,x.few);
+      html+='<tr><td class="mode">'+cap(m)+'</td><td>'+x.p+'</td><td>'+(x.fast?fmt(x.fast):D)+'</td><td>'+(x.p?(x.lp/x.p).toFixed(1):D)+'</td><td>'+(x.few!=null?x.few:D)+'</td></tr>';
+    });
+    html+='<tr class="total"><td class="mode">All</td><td>'+tp4+'</td><td>'+(tf4?fmt(tf4):D)+'</td><td>'+(tp4?(tl4/tp4).toFixed(1):D)+'</td><td>'+(tw4>=0?tw4:D)+'</td></tr>';
   }else if(trkTab==='reverse'){
     var rvs=s.rev||{},tp3=0,tb3=0,tcl=0;
     html='<tr><th>Difficulty</th><th>Games</th><th>Fewest</th><th>Avg Clues</th><th>Par</th></tr>';
@@ -2104,6 +2307,7 @@ function renderTracker(tab){
     return '<div class="rg"><span>'+cap(e.d)+'</span><span>'+fmt(e.ms)+'</span>'
       +'<span class="'+((e.mist||0)>0?'loss':'win')+'">\u2717 '+(e.mist||0)+'</span>'
       +(trkTab==='mahjong'?'<span title="Score">\u2605 '+(e.sc||0).toLocaleString()+'</span>':'')
+      +(trkTab==='goat'?'<span class="'+(e.rs?'':'win')+'" title="Leaps'+(e.rs?' ('+e.rs+' rescues)':'')+'">'+e.lp+(e.lp===1?' leap':' leaps')+'</span>':'')
       +(trkTab==='reverse'?'<span class="'+(e.cl<=e.par?'win':'')+'" title="Clues left (par '+e.par+')">'+e.cl+' clues</span>':'')
       +(e.h?'<span title="Hint Mode on">'+BULB+'</span>':'<span></span>')+'</div>';
   }).join('');
@@ -2112,16 +2316,17 @@ function renderTracker(tab){
 function endGame(){
   if(dgMode){floorCleared();return;}
   if(revMode)return;
-  $('#endTitle').textContent='You Win! '+String.fromCodePoint(0x1F389);
+  $('#endTitle').textContent=gtMode?(gt.rescues?'Summit reached! ':'Sure-footed! ')+GOAT:'You Win! '+String.fromCodePoint(0x1F389);
   var ms=elapsedMs();
   finished=true;runTimer(false);syncUndo();
   $('#timeVal').textContent=fmt(ms);
   recordGame(ms);
   $('#endStats').textContent=(mjMode?'Score '+score.toLocaleString()+' \u00B7 Melds '+melds+' \u00B7 ':'')
+    +(gtMode?'Leaps '+gt.leaps+(gt.rescues?' ('+gt.rescues+(gt.rescues===1?' rescue':' rescues')+')':'')+' \u00B7 Hay left '+gt.hay+' \u00B7 ':'')
     +'Time '+fmt(ms)+' \u00B7 Mistakes '+mistakes+' \u00B7 Hints used '+(3-hintsLeft)+(hintMode?' \u00B7 '+BULB+' Hint Mode on':'');
   if(mjMode){selectedTile=-1;renderHand();}
   $('#endOverlay').classList.remove('hidden');
-  confetti();if(catMode)sfx.chorus();else if(melMode)melCadence();else sfx.win();
+  confetti();if(catMode)sfx.chorus();else if(melMode)melCadence();else if(gtMode)sfx.goatWin();else sfx.win();
 }
 function newGame(){
   if(typeof melStop==='function'&&mel.playing)melStop();
@@ -2135,6 +2340,7 @@ function newGame(){
   peekArm=false;ghostBox=-1;
   if(dgMode)dgSetupFloor();
   if(revMode)scanLocks();
+  if(gtMode)gtSetup();
   applyModeUI();
   lastNap=-1;paintPad();
   if(mjMode)fillHand();
@@ -2196,6 +2402,7 @@ $('#dgRuleBtn').addEventListener('click',function(){showRules('dungeon');});
 $('#rvRuleBtn').addEventListener('click',function(){showRules('reverse');});
 $('#melRuleBtn').addEventListener('click',function(){showRules('melody');});
 $('#melPlayBtn').addEventListener('click',melSong);
+$('#gtRuleBtn').addEventListener('click',function(){showRules('goat');});
 $('#songBtn').addEventListener('click',function(){$('#endOverlay').classList.add('hidden');melStop();melSong();});
 $('#removeBtn').addEventListener('click',function(){if(selected>=0)revRemove(selected);else toast('Select a number first',0);});
 $('#finishBtn').addEventListener('click',function(){
@@ -2204,7 +2411,7 @@ $('#finishBtn').addEventListener('click',function(){
     var b=this;clearTimeout(finishTm);finishTm=setTimeout(function(){finishArmed=false;b.classList.remove('arm');$('#finishLbl').textContent='Finish';},3000);return;}
   finishArmed=false;this.classList.remove('arm');$('#finishLbl').textContent='Finish';revEnd(false);
 });
-['mjRules','dgRules','rvRules','melRules'].forEach(function(id){
+['mjRules','dgRules','rvRules','melRules','gtRules'].forEach(function(id){
   $('#'+id+'Btn').addEventListener('click',function(){$('#'+id).classList.add('hidden');});
   $('#'+id).addEventListener('click',function(e){if(e.target===this)this.classList.add('hidden');});
 });
@@ -2246,7 +2453,7 @@ applyTheme(curTheme(),false);
 
 var sbtn=$('#soundBtn');
 function syncSb(){sbtn.classList.toggle('muted',!sfx.on);}
-sbtn.addEventListener('click',function(){sfx.on=!sfx.on;store.setItem('sudoku.sound',sfx.on?'1':'0');syncSb();if(sfx.on){if(melMode)melNote(5);else if(catMode)sfx.meow(5);else sfx.place();}});
+sbtn.addEventListener('click',function(){sfx.on=!sfx.on;store.setItem('sudoku.sound',sfx.on?'1':'0');syncSb();if(sfx.on){if(melMode)melNote(5);else if(catMode)sfx.meow(5);else if(gtMode)sfx.bleat(5);else sfx.place();}});
 syncSb();
 
 $('#statsBtn').addEventListener('click',function(){renderTracker(curModeKey());$('#trackerOverlay').classList.remove('hidden');});
