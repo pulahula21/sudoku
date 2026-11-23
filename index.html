@@ -286,8 +286,8 @@ var m=document.querySelector('meta[name="theme-color"]');if(m)m.setAttribute('co
   .nn{position:absolute;right:4%;bottom:2%;font-size:clamp(6px,2.1cqi,10px);font-weight:700;color:var(--muted);line-height:1;font-style:italic}
   body.mel .pad .btn{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:1px;line-height:1}
   body.mel .pad .btn .pnum{font-size:10px;font-style:italic}
-  .cell.ring{animation:ring .55s ease-out}
-  @keyframes ring{0%{background:color-mix(in srgb,var(--rc) 70%,transparent);transform:scale(1.12)}100%{transform:scale(1)}}
+  .cell.ring{animation:ring .8s ease-out}
+  @keyframes ring{0%{background:color-mix(in srgb,var(--rc) 80%,transparent);transform:scale(1.12)}40%{background:color-mix(in srgb,var(--rc) 45%,transparent)}100%{transform:scale(1)}}
   body.mel{font-family:"Alegreya",Georgia,"Times New Roman",serif}
   body.mel .blob{display:none}
   body.mel h1{font-weight:700;letter-spacing:.3em}
@@ -727,7 +727,7 @@ var m=document.querySelector('meta[name="theme-color"]');if(m)m.setAttribute('co
 
 <div class="app">
   <header>
-    <h1>SUDOKU<span id="verTag" class="ver">v1.3.0</span></h1>
+    <h1>SUDOKU<span id="verTag" class="ver">v1.3.1</span></h1>
     <div class="hdr-btns">
       <button id="themeBtn" class="icon-btn" title="Toggle light/dark">
         <svg class="sun" viewBox="0 0 24 24" width="24" height="24" fill="none" aria-hidden="true">
@@ -1008,7 +1008,7 @@ var m=document.querySelector('meta[name="theme-color"]');if(m)m.setAttribute('co
 'use strict';
 window.__sudokuBoot=true;
 var bm=document.getElementById('bootMsg');if(bm)bm.style.display='none';
-var vt=document.getElementById('verTag');if(vt)vt.textContent='v1.3.0';
+var vt=document.getElementById('verTag');if(vt)vt.textContent='v1.3.1';
 
 function $(s){return document.querySelector(s);}
 function cap(s){return s.charAt(0).toUpperCase()+s.slice(1);}
@@ -1301,7 +1301,7 @@ function render(){
         if(sv&&v===sv&&!fogged)cls+=' peer';
       }
     }else if(sv&&v===sv&&!fogged)cls+=' peer';
-    if(lastCls[i]!==cls){el.className=cls;lastCls[i]=cls;}
+    if(lastCls[i]!==cls){el.className=el.classList.contains('ring')?cls+' ring':cls;lastCls[i]=cls;}
     var key=v?(catMode?'c'+v+(napping?'z':''):(melMode?'m':'v')+v):(notes[i]?(catMode?'p':'n')+notes[i]:'');
     if(fogged&&puzzle[i])key='F'; /* fog hides the givens it covers */
     if(revMode&&!v)key='r'+solution[i]; /* Reverse shows removed numbers faded */
@@ -1889,15 +1889,16 @@ function melStop(){
 /* Play a list of cells in order. Empty cells are rests. Each cell lights as its note sounds. */
 function melPlay(cells,step,opts){
   opts=opts||{};
-  var c=melCtx();
-  if(!c){if(opts.loud)toast('Turn sound on to hear the melody',0);return 0;}
+  var c=melCtx(); /* with sound off the board still lights up, just silently */
+  if(!c&&opts.loud)toast('Sound is off \u00B7 the song plays as light only',0);
   if(!opts.layer)melStop();
-  var tok=mel.token,t0=c.currentTime+.06,bus=c.createGain();bus.gain.value=1;bus.connect(c.destination);
+  var tok=mel.token,t0=c?c.currentTime+.06:0,bus=null;
+  if(c){bus=c.createGain();bus.gain.value=1;bus.connect(c.destination);}
   if(!opts.layer){mel.bus=bus;mel.playing=true;}
   cells.forEach(function(i,n){
     var v=grid[i],ok=v&&!wrongSet[i],at=n*step;
-    if(ok)melVoice(c,bus,MEL_HZ[v],t0+at,Math.max(.5,step*3),.14);
-    if(opts.bass&&n%9===0){ /* a low root under each bar: the bar's first note, an octave down */
+    if(ok&&c)melVoice(c,bus,MEL_HZ[v],t0+at,Math.max(.5,step*3),.14);
+    if(c&&opts.bass&&n%9===0){ /* a low root under each bar: the bar's first note, an octave down */
       var r=grid[i]&&!wrongSet[i]?grid[i]:1;melVoice(c,bus,MEL_HZ[r]/2,t0+at,step*9,.11);
     }
     mel.timers.push(setTimeout(function(){
