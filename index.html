@@ -750,7 +750,7 @@ var m=document.querySelector('meta[name="theme-color"]');if(m)m.setAttribute('co
 
 <div class="app">
   <header>
-    <h1>SUDOKU<span id="verTag" class="ver">v1.4.0</span></h1>
+    <h1>SUDOKU<span id="verTag" class="ver">v1.4.1</span></h1>
     <div class="hdr-btns">
       <button id="themeBtn" class="icon-btn" title="Toggle light/dark">
         <svg class="sun" viewBox="0 0 24 24" width="24" height="24" fill="none" aria-hidden="true">
@@ -828,7 +828,7 @@ var m=document.querySelector('meta[name="theme-color"]');if(m)m.setAttribute('co
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 14L4 9l5-5"/><path d="M4 9h10.5a5.5 5.5 0 0 1 0 11H11"/></svg><span class="lbl">Undo</span></button>
     <button class="btn" id="notesBtn" title="Notes (N)">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 20h4L19 9l-4-4L4 16v4z"/><path d="M13.5 6.5l4 4"/></svg><span class="lbl">Notes</span></button>
-    <button class="btn" id="allNotesBtn" title="All Notes: fill every empty cell with the numbers that could go there">
+    <button class="btn" id="allNotesBtn" title="All Notes: show every number that could go in each empty cell (your own notes are kept)">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3.5" y="3.5" width="17" height="17" rx="2.5"/><circle cx="8.3" cy="8.3" r=".9" fill="currentColor"/><circle cx="12" cy="8.3" r=".9" fill="currentColor"/><circle cx="15.7" cy="8.3" r=".9" fill="currentColor"/><circle cx="8.3" cy="12" r=".9" fill="currentColor"/><circle cx="12" cy="12" r=".9" fill="currentColor"/><circle cx="15.7" cy="12" r=".9" fill="currentColor"/><circle cx="8.3" cy="15.7" r=".9" fill="currentColor"/><circle cx="12" cy="15.7" r=".9" fill="currentColor"/><circle cx="15.7" cy="15.7" r=".9" fill="currentColor"/></svg><span class="lbl">All Notes</span></button>
     <button class="btn" id="quickBtn" title="Quick Entry (Q): pick a number, then tap cells">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M13 2L4 14h7l-1 8 9-12h-7l1-8z"/></svg><span class="lbl">Quick</span></button>
@@ -1033,7 +1033,7 @@ var m=document.querySelector('meta[name="theme-color"]');if(m)m.setAttribute('co
 'use strict';
 window.__sudokuBoot=true;
 var bm=document.getElementById('bootMsg');if(bm)bm.style.display='none';
-var vt=document.getElementById('verTag');if(vt)vt.textContent='v1.4.0';
+var vt=document.getElementById('verTag');if(vt)vt.textContent='v1.4.1';
 
 function $(s){return document.querySelector(s);}
 function cap(s){return s.charAt(0).toUpperCase()+s.slice(1);}
@@ -1234,6 +1234,7 @@ var sfx={
 /* ---------- state ---------- */
 var puzzle,solution,grid,notes,selected=-1,wrongSet={},mistakes=0,hintsLeft=3,correct=0;
 var hlDigit=0; /* digit to highlight when a number is pressed on a locked cell (0 = use the cell's own value) */
+var autoN=store.getItem('sudoku.autoNotes')==='1',elim=new Array(81).fill(0),disp=new Array(81).fill(0); /* All Notes: live candidates over the player's own notes */
 var quickMode=store.getItem('sudoku.quick')==='1',quickDigit=0; /* Quick Entry: pick a number, tap cells to place it */
 var undoStack=[],UNDO_MAX=300;
 /* Mahjong mode: draw tiles into a hand, place them, score melds */
@@ -1290,7 +1291,11 @@ var padBtns={};
 })();
 
 /* ---------- rendering (only touches cells that changed) ---------- */
+function autoMasks(){var g=grid.slice();for(var k in wrongSet)g[k]=0;return new Masks(g);}
+function autoSkip(i){return (dgMode&&dg&&((dg.mods&&dg.mods.fog&&!dg.lit[i])||dg.cursed[i]));} /* fog and curses keep their secrets */
+function shownNotes(i,m){if(!autoN||grid[i]||autoSkip(i))return notes[i];return (m.cand(i)&~elim[i])|notes[i];}
 function render(){
+  var am=autoN?autoMasks():null;for(var q=0;q<81;q++)disp[q]=shownNotes(q,am);
   var sel=quickMode?-1:selected; /* Quick Entry has no selected cell, only a picked number */
   var sv=quickMode?quickDigit:(sel>=0?(hlDigit||grid[sel]):0),sr=ROW[sel],sc=COL[sel],sb=BOX[sel];
   if(mjMode&&selectedTile>=0)sv=hand[selectedTile];
@@ -1327,8 +1332,8 @@ function render(){
       }
     }else if(sv&&v===sv&&!fogged)cls+=' peer';
     if(lastCls[i]!==cls){el.className=el.classList.contains('ring')?cls+' ring':cls;lastCls[i]=cls;}
-    var nh=(!v&&sv&&notes[i]&(1<<sv))?sv:0;
-    var key=v?(catMode?'c'+v+(napping?'z':''):(melMode?'m':'v')+v):(notes[i]?(catMode?'p':'n')+notes[i]+'h'+nh:'');
+    var nh=(!v&&sv&&disp[i]&(1<<sv))?sv:0;
+    var key=v?(catMode?'c'+v+(napping?'z':''):(melMode?'m':'v')+v):(disp[i]?(catMode?'p':'n')+disp[i]+'h'+nh:'');
     if(fogged&&puzzle[i])key='F'; /* fog hides the givens it covers */
     if(revMode&&!v)key='r'+solution[i]; /* Reverse shows removed numbers faded */
     if(lastKey[i]!==key){
@@ -1338,12 +1343,12 @@ function render(){
       else if(v&&catMode)el.innerHTML=catSvg(v,napping);
       else if(v&&melMode)el.innerHTML=v+'<span class="nn">'+MEL_NAME[v]+'</span>';
       else if(v)el.textContent=v;
-      else if(notes[i]&&catMode){
-        var ph='';for(var pd=1;pd<=9;pd++)ph+='<span'+(pd===nh?' class="on"':'')+'>'+(notes[i]&(1<<pd)?pawSvg(pd):'')+'</span>';
+      else if(disp[i]&&catMode){
+        var ph='';for(var pd=1;pd<=9;pd++)ph+='<span'+(pd===nh?' class="on"':'')+'>'+(disp[i]&(1<<pd)?pawSvg(pd):'')+'</span>';
         el.innerHTML='<div class="paws">'+ph+'</div>';
       }
-      else if(notes[i]){
-        var h='';for(var d=1;d<=9;d++)h+='<span'+(d===nh?' class="on"':'')+'>'+(notes[i]&(1<<d)?d:'')+'</span>';
+      else if(disp[i]){
+        var h='';for(var d=1;d<=9;d++)h+='<span'+(d===nh?' class="on"':'')+'>'+(disp[i]&(1<<d)?d:'')+'</span>';
         el.innerHTML='<div class="notes-grid">'+h+'</div>';
       }else el.textContent='';
     }
@@ -1460,7 +1465,7 @@ function clearPeerNotes(i,d){
 
 /* ---------- undo (board + notes + wrong marks; mistakes stay counted, hints stay spent) ---------- */
 function snapshot(){
-  undoStack.push({g:grid.slice(),n:notes.slice(),w:Object.assign({},wrongSet),
+  undoStack.push({g:grid.slice(),n:notes.slice(),e:elim.slice(),w:Object.assign({},wrongSet),
     h:hand.slice(),sc:score,rn:run.slice(),ml:melds,rs:rngState,gt:Object.assign({},gt)});
   if(undoStack.length>UNDO_MAX)undoStack.shift();
   syncUndo();
@@ -1469,7 +1474,7 @@ function undo(){
   if(revMode){revUndo();return;}
   if(finished||!undoStack.length)return;
   var u=undoStack.pop();
-  grid=u.g;notes=u.n;wrongSet=u.w;
+  grid=u.g;notes=u.n;if(u.e)elim=u.e;wrongSet=u.w;
   hand=u.h;score=u.sc;run=u.rn;melds=u.ml;rngState=u.rs;selectedTile=-1;lastDrawn=-1; /* RNG restored too: undo can't re-roll a draw */
   correct=0;for(var i=0;i<81;i++)if(grid[i]&&grid[i]===solution[i])correct++;
   if(gtMode&&u.gt){gt=u.gt;gtFx='step';updateStat3();}
@@ -1479,7 +1484,7 @@ function undo(){
 function syncUndo(){$('#undoBtn').disabled=finished||!undoStack.length;}
 
 function clearCell(i){ /* caller takes the snapshot */
-  setVal(i,0);notes[i]=0;delete wrongSet[i];hlDigit=0;
+  setVal(i,0);notes[i]=0;elim[i]=0;delete wrongSet[i];hlDigit=0;
   sfx.note();render();updatePad();
 }
 function placeValue(i,d){ /* caller takes the snapshot */
@@ -1510,7 +1515,14 @@ function placeValue(i,d){ /* caller takes the snapshot */
   if(ok&&dgMode)dgCorrect(i);
   if(isComplete())endGame();
 }
-function toggleNote(i,d){snapshot();notes[i]^=(1<<d);sfx.note();render();updatePad();}
+function toggleNote(i,d){
+  snapshot();var bit=1<<d;
+  if(autoN&&!autoSkip(i)){var a=autoMasks().cand(i);
+    if(((a&~elim[i])|notes[i])&bit){notes[i]&=~bit;if(a&bit)elim[i]|=bit;}
+    else{notes[i]|=bit;elim[i]&=~bit;}
+  }else notes[i]^=bit;
+  sfx.note();render();updatePad();
+}
 
 function placeOrNote(d){
   if(finished||selected<0)return;
@@ -1524,8 +1536,9 @@ function placeOrNote(d){
 function erase(){ /* keyboard Backspace/Delete */
   if(revMode){if(selected>=0)revRemove(selected);return;}
   if(finished||selected<0||puzzle[selected])return;
-  if(!grid[selected]&&!notes[selected])return;
+  if(!grid[selected]&&!disp[selected])return;
   if(gtMode&&grid[selected])return;
+  if(autoN&&!grid[selected]){snapshot();notes[selected]=0;elim[selected]=FULL;sfx.note();render();return;}
   snapshot();clearCell(selected);
 }
 
@@ -2268,7 +2281,7 @@ function saveRun(){
 function resumeRun(){
   var r=null;try{r=JSON.parse(store.getItem(DG_KEY));}catch(e){}
   if(!r||!r.dg||r.dg.phase==='dead')return false;
-  dg=r.dg;puzzle=r.puzzle;solution=r.solution;grid=r.grid;notes=r.notes;diff=r.diff;
+  dg=r.dg;puzzle=r.puzzle;solution=r.solution;grid=r.grid;notes=r.notes;elim=new Array(81).fill(0);diff=r.diff;
   correct=0;for(var i=0;i<81;i++)if(grid[i]&&grid[i]===solution[i])correct++;
   wrongSet={};mistakes=r.mist||0;hintsLeft=dg.inv.hint;selected=-1;hlDigit=0;quickDigit=0;undoStack=[];
   hand=[];selectedTile=-1;peekArm=false;ghostBox=-1;
@@ -2430,7 +2443,7 @@ function newGame(){
   diff=dgMode?floorDiff(dg.floor):$('#diffSel').value;
   NC_RULE=catMode;
   var g=revMode?revGenerate():generatePuzzle(diff); /* fresh random board every game */
-  puzzle=g.puzzle;solution=g.solution;grid=puzzle.slice();notes=new Array(81).fill(0);
+  puzzle=g.puzzle;solution=g.solution;grid=puzzle.slice();notes=new Array(81).fill(0);elim=new Array(81).fill(0);
   correct=0;for(var i=0;i<81;i++)if(puzzle[i])correct++;
   wrongSet={};mistakes=0;hintsLeft=3;selected=-1;hlDigit=0;quickDigit=0;undoStack=[];finished=false;
   hand=[];selectedTile=-1;score=0;run=[];melds=0;rngState=(Math.random()*4294967296)|0;
@@ -2484,22 +2497,16 @@ $('#newGameBtn').addEventListener('click',function(){
 $('#againBtn').addEventListener('click',newGame);
 $('#closeEndBtn').addEventListener('click',function(){$('#endOverlay').classList.add('hidden');});
 
-/* All Notes: every empty cell gets the numbers that could still go there (wrong entries are ignored) */
-function allNotes(){
-  if(finished||revMode)return;
-  var g=grid.slice(),k,fogOn=dgMode&&dg&&dg.mods&&dg.mods.fog;
-  for(k in wrongSet)g[k]=0;
-  var m=new Masks(g),n=0,changed=false,next=notes.slice();
-  for(var i=0;i<81;i++){
-    if(grid[i]||(fogOn&&!dg.lit[i]))continue;
-    var c=m.cand(i);if(next[i]!==c){next[i]=c;changed=true;}n++;
-  }
-  if(!n)return;
-  if(!changed){toast('Notes are already full',0);return;}
-  snapshot();notes=next;sfx.note();render();
-  toast('Notes filled in',0);
+/* All Notes toggle: shows every number that could still go in each empty cell, kept up to date as you play.
+   Your own notes are kept separately and come back untouched when it's switched off. */
+function setAutoNotes(on,quiet){
+  autoN=on;store.setItem('sudoku.autoNotes',on?'1':'0');
+  $('#allNotesBtn').classList.toggle('active',on);
+  render();
+  if(!quiet)toast(on?'All Notes on':'All Notes off \u00B7 your own notes are back',0);
 }
-$('#allNotesBtn').addEventListener('click',allNotes);
+$('#allNotesBtn').addEventListener('click',function(){if(!finished)setAutoNotes(!autoN);});
+$('#allNotesBtn').classList.toggle('active',autoN);
 $('#resumeBtn').addEventListener('click',function(){setPaused(false);});
 $('#timeStat').addEventListener('click',function(){if(finished||(dgMode&&dg&&dg.phase!=='play'))return;setPaused(true);});
 $('#timeStat').addEventListener('keydown',function(e){if(e.key==='Enter'||e.key===' '){e.preventDefault();this.click();}});
