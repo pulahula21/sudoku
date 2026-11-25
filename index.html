@@ -318,6 +318,23 @@ var m=document.querySelector('meta[name="theme-color"]');if(m)m.setAttribute('co
     --active-bg:rgba(230,184,92,.16); --active-text:#fff1d0;
   }
   @media (prefers-reduced-motion:reduce){.cell.ring{animation:none}}
+  /* notes: bigger, and the active number lights up inside every note */
+  .notes-grid{width:94%!important;height:94%!important;font-size:clamp(8px,3.05cqi,15px)!important;font-weight:700;line-height:1}
+  .notes-grid span{display:flex;align-items:center;justify-content:center;width:100%;height:100%;border-radius:4px}
+  .notes-grid span.on{background:var(--accent);color:var(--board-bg,#fff);opacity:1}
+  .paws{width:96%!important;height:96%!important}
+  .paws svg{width:92%!important;height:92%!important}
+  .paws span{display:flex;align-items:center;justify-content:center;width:100%;height:100%;border-radius:4px}
+  .paws span.on{background:color-mix(in srgb,var(--accent) 35%,transparent)}
+  /* six action buttons: keep every label whole on phones */
+  @media (max-width:500px){.actions{gap:4px}.actions .btn{padding:4px 0;font-size:10px}.actions .lbl{letter-spacing:-.01em}
+    body.dg .actions .lbl,body.mj .actions .lbl{font-size:9px;letter-spacing:0}}
+  @media (max-width:340px){.actions .lbl{font-size:8.5px;letter-spacing:-.02em}body.dg .actions .lbl,body.mj .actions .lbl{font-size:7.5px}}
+  /* a little more board on phones: trim the side margins */
+  @media (max-width:500px) and (orientation:portrait){
+    body{padding-left:calc(6px + env(safe-area-inset-left,0px))!important;padding-right:calc(6px + env(safe-area-inset-right,0px))!important}
+    .app{width:100%!important}
+  }
   /* the clock box doubles as a pause button */
   #timeStat{position:relative;cursor:pointer;-webkit-tap-highlight-color:transparent;transition:transform .1s,border-color .15s}
   #timeStat:hover{border-color:var(--hover-line)}
@@ -426,7 +443,7 @@ var m=document.querySelector('meta[name="theme-color"]');if(m)m.setAttribute('co
   /* ===================== Reverse mode ===================== */
   #removeBtn,#finishBtn{display:none}
   body.rev #finishBtn{display:flex}
-  body.rev #notesBtn,body.rev #quickBtn{display:none}
+  body.rev #notesBtn,body.rev #quickBtn,body.rev #allNotesBtn{display:none}
   #rvLine{display:none;align-items:center;justify-content:space-between;gap:10px;font-size:11.5px;color:var(--muted);padding-top:6px;min-height:20px}
   body.rev #rvLine{display:flex}
   #rvRuleBtn{flex:none;background:none;border:1px solid var(--line-strong);border-radius:999px;color:var(--text);font:inherit;font-size:11px;padding:2px 9px;cursor:pointer}
@@ -539,9 +556,16 @@ var m=document.querySelector('meta[name="theme-color"]');if(m)m.setAttribute('co
     --cat1:#e5484d; --cat2:#f2833a; --cat3:#e3b215; --cat4:#86bf3e; --cat5:#2fa36b;
     --cat6:#16a3a8; --cat7:#3b82f6; --cat8:#6d5ce7; --cat9:#c04bd1;
     --given-bg:rgba(148,163,255,.10); --nap-bg:rgba(250,204,21,.07);
+    --kit1:#e53935; --kit2:#f57c1f; --kit3:#f5c400; --kit4:#2db84d; --kit5:#1e6ff2;
+    --kit6:#9b3fe0; --kit7:#f264b4; --kit8:#24212b; --kit9:#fbfaf6;
   }
   :root[data-theme="light"]{--given-bg:rgba(120,96,60,.07); --nap-bg:rgba(240,196,70,.13)}
   body.cat .cell .cat{width:80%;height:80%;display:block}
+  /* black cat: golden eyes and pale whiskers; white cat: a soft outline so it reads on a light board */
+  svg.k8{--eye:#f2cf3a;--ink:#cfcbd8;--blush:#f29bb2}
+  svg.k9{--outline:#8b8474}
+  :root:not([data-theme="light"]) svg.k8{--outline:rgba(255,255,255,.55)}
+  :root:not([data-theme="light"]) svg.k9{--outline:rgba(0,0,0,.35)}
   body.cat .cell.given{background:var(--given-bg)}
   body.cat .cell.nap{background:var(--nap-bg)}
   body.cat .cell.unit{background:var(--cell-unit)}
@@ -577,8 +601,7 @@ var m=document.querySelector('meta[name="theme-color"]');if(m)m.setAttribute('co
   .rules-card .btn{margin-top:12px;height:46px;padding:0 28px}
   #catWheel{position:relative;width:170px;height:170px;margin:12px auto 8px}
   #catWheel::before{content:"";position:absolute;inset:14%;border-radius:50%;
-    background:conic-gradient(var(--cat1),var(--cat2),var(--cat3),var(--cat4),var(--cat5),var(--cat6),var(--cat7),var(--cat8),var(--cat9),var(--cat1));
-    -webkit-mask:radial-gradient(closest-side,transparent 74%,#000 76%);mask:radial-gradient(closest-side,transparent 74%,#000 76%);opacity:.55}
+    border:3px dashed var(--line-strong);opacity:.7}
   .wcat{position:absolute;width:40px;height:40px;transform:translate(-50%,-50%)}
   .wcat .cat{width:100%;height:100%;display:block}
   .wcat .cnum{right:-2px;bottom:-2px;font-size:10px}
@@ -700,34 +723,34 @@ var m=document.querySelector('meta[name="theme-color"]');if(m)m.setAttribute('co
 <div id="bootMsg">Loading game&hellip;<br>If this stays on screen, JavaScript is blocked or the file was saved incompletely &mdash; open <b>sudoku.html</b> directly in your browser.</div>
 <svg width="0" height="0" style="position:absolute" aria-hidden="true">
   <symbol id="catAwake" viewBox="0 0 24 24">
-    <path d="M4.2 9.2L5 2.8l4.6 4.3Q12 6.4 14.4 7.1L19 2.8l.8 6.4q1.7 3 .8 6.3Q19.1 20.7 12 20.7T3.4 15.5q-.9-3.3.8-6.3z" fill="currentColor"/>
+    <path d="M4.2 9.2L5 2.8l4.6 4.3Q12 6.4 14.4 7.1L19 2.8l.8 6.4q1.7 3 .8 6.3Q19.1 20.7 12 20.7T3.4 15.5q-.9-3.3.8-6.3z" fill="currentColor" style="stroke:var(--outline,none);stroke-width:1.1;paint-order:stroke"/>
     <path d="M6 5.3l.4 3 2-1.8zM18 5.3l-.4 3-2-1.8z" fill="#fff" opacity=".35"/>
-    <ellipse cx="8.9" cy="13" rx="1.35" ry="1.85" fill="#1d1b2a"/><ellipse cx="15.1" cy="13" rx="1.35" ry="1.85" fill="#1d1b2a"/>
+    <ellipse cx="8.9" cy="13" rx="1.35" ry="1.85" style="fill:var(--eye,#1d1b2a)"/><ellipse cx="15.1" cy="13" rx="1.35" ry="1.85" style="fill:var(--eye,#1d1b2a)"/>
     <circle cx="9.3" cy="12.4" r=".45" fill="#fff"/><circle cx="15.5" cy="12.4" r=".45" fill="#fff"/>
     <path d="M11 15.7h2l-1 1.1z" fill="#e7849a"/>
-    <path d="M12 16.8v.7M12 17.5q-1 .9-2 .2M12 17.5q1 .9 2 .2" stroke="#1d1b2a" stroke-width=".6" fill="none" stroke-linecap="round"/>
-    <path d="M2.4 14.6l3.6.4M2.7 17.1l3.4-.8M21.6 14.6l-3.6.4M21.3 17.1l-3.4-.8" stroke="#1d1b2a" stroke-width=".45" opacity=".55" stroke-linecap="round"/>
+    <path d="M12 16.8v.7M12 17.5q-1 .9-2 .2M12 17.5q1 .9 2 .2" style="stroke:var(--ink,#1d1b2a)" stroke-width=".6" fill="none" stroke-linecap="round"/>
+    <path d="M2.4 14.6l3.6.4M2.7 17.1l3.4-.8M21.6 14.6l-3.6.4M21.3 17.1l-3.4-.8" style="stroke:var(--ink,#1d1b2a)" stroke-width=".45" opacity=".55" stroke-linecap="round"/>
   </symbol>
   <symbol id="catNap" viewBox="0 0 24 24">
     <path d="M19.6 17.4q3.4-.4 2.6-4.6" stroke="currentColor" stroke-width="2.3" fill="none" stroke-linecap="round"/>
-    <ellipse cx="13.4" cy="15.6" rx="8.4" ry="5.4" fill="currentColor"/>
+    <ellipse cx="13.4" cy="15.6" rx="8.4" ry="5.4" fill="currentColor" style="stroke:var(--outline,none);stroke-width:1.1;paint-order:stroke"/>
     <path d="M3.3 11.2l.6-3.6 2.7 2zM8.5 9.5l2.8-1.6.1 3.4z" fill="currentColor"/>
-    <circle cx="7.4" cy="13.6" r="4.6" fill="currentColor"/>
-    <path d="M5 14.1q.9.8 1.8 0M8.3 14.1q.9.8 1.8 0" stroke="#1d1b2a" stroke-width=".7" fill="none" stroke-linecap="round"/>
+    <circle cx="7.4" cy="13.6" r="4.6" fill="currentColor" style="stroke:var(--outline,none);stroke-width:1.1;paint-order:stroke"/>
+    <path d="M5 14.1q.9.8 1.8 0M8.3 14.1q.9.8 1.8 0" style="stroke:var(--ink,#1d1b2a)" stroke-width=".7" fill="none" stroke-linecap="round"/>
     <path d="M7.1 15.8h.9l-.45.5z" fill="#e7849a"/>
-    <path d="M10.4 19.6q2 1 4.4.4" stroke="#1d1b2a" stroke-width=".5" opacity=".35" fill="none" stroke-linecap="round"/>
+    <path d="M10.4 19.6q2 1 4.4.4" style="stroke:var(--ink,#1d1b2a)" stroke-width=".5" opacity=".35" fill="none" stroke-linecap="round"/>
   </symbol>
   <symbol id="paw" viewBox="0 0 24 24">
-    <ellipse cx="12" cy="15.8" rx="5" ry="4.2" fill="currentColor"/>
-    <ellipse cx="5.6" cy="10.4" rx="2.1" ry="2.6" fill="currentColor"/><ellipse cx="9.6" cy="6.6" rx="2.1" ry="2.7" fill="currentColor"/>
-    <ellipse cx="14.4" cy="6.6" rx="2.1" ry="2.7" fill="currentColor"/><ellipse cx="18.4" cy="10.4" rx="2.1" ry="2.6" fill="currentColor"/>
+    <ellipse cx="12" cy="15.8" rx="5" ry="4.2" fill="currentColor" style="stroke:var(--outline,none);stroke-width:1.1;paint-order:stroke"/>
+    <ellipse cx="5.6" cy="10.4" rx="2.1" ry="2.6" fill="currentColor" style="stroke:var(--outline,none);stroke-width:1.1;paint-order:stroke"/><ellipse cx="9.6" cy="6.6" rx="2.1" ry="2.7" fill="currentColor" style="stroke:var(--outline,none);stroke-width:1.1;paint-order:stroke"/>
+    <ellipse cx="14.4" cy="6.6" rx="2.1" ry="2.7" fill="currentColor" style="stroke:var(--outline,none);stroke-width:1.1;paint-order:stroke"/><ellipse cx="18.4" cy="10.4" rx="2.1" ry="2.6" fill="currentColor" style="stroke:var(--outline,none);stroke-width:1.1;paint-order:stroke"/>
   </symbol>
 </svg>
 <div class="blob a"></div><div class="blob b"></div>
 
 <div class="app">
   <header>
-    <h1>SUDOKU<span id="verTag" class="ver">v1.3.1</span></h1>
+    <h1>SUDOKU<span id="verTag" class="ver">v1.4.0</span></h1>
     <div class="hdr-btns">
       <button id="themeBtn" class="icon-btn" title="Toggle light/dark">
         <svg class="sun" viewBox="0 0 24 24" width="24" height="24" fill="none" aria-hidden="true">
@@ -805,6 +828,8 @@ var m=document.querySelector('meta[name="theme-color"]');if(m)m.setAttribute('co
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 14L4 9l5-5"/><path d="M4 9h10.5a5.5 5.5 0 0 1 0 11H11"/></svg><span class="lbl">Undo</span></button>
     <button class="btn" id="notesBtn" title="Notes (N)">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 20h4L19 9l-4-4L4 16v4z"/><path d="M13.5 6.5l4 4"/></svg><span class="lbl">Notes</span></button>
+    <button class="btn" id="allNotesBtn" title="All Notes: fill every empty cell with the numbers that could go there">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3.5" y="3.5" width="17" height="17" rx="2.5"/><circle cx="8.3" cy="8.3" r=".9" fill="currentColor"/><circle cx="12" cy="8.3" r=".9" fill="currentColor"/><circle cx="15.7" cy="8.3" r=".9" fill="currentColor"/><circle cx="8.3" cy="12" r=".9" fill="currentColor"/><circle cx="12" cy="12" r=".9" fill="currentColor"/><circle cx="15.7" cy="12" r=".9" fill="currentColor"/><circle cx="8.3" cy="15.7" r=".9" fill="currentColor"/><circle cx="12" cy="15.7" r=".9" fill="currentColor"/><circle cx="15.7" cy="15.7" r=".9" fill="currentColor"/></svg><span class="lbl">All Notes</span></button>
     <button class="btn" id="quickBtn" title="Quick Entry (Q): pick a number, then tap cells">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M13 2L4 14h7l-1 8 9-12h-7l1-8z"/></svg><span class="lbl">Quick</span></button>
     <button class="btn" id="redrawBtn" title="Redraw the selected tile (-10 points)" disabled>
@@ -898,9 +923,9 @@ var m=document.querySelector('meta[name="theme-color"]');if(m)m.setAttribute('co
 <div id="catRules" class="overlay hidden">
   <div class="card rules-card">
     <h2>Cat Caf&eacute;</h2>
-    <p>Every number is a cat, and the nine cats sit around a color wheel in order.</p>
+    <p>Every number is a cat, and the nine cats sit around a wheel in order: red, orange, yellow, green, blue, purple, pink, black and white.</p>
     <div id="catWheel" aria-hidden="true"></div>
-    <p>House rule: cats that sit next to each other on the wheel are territorial. They won&rsquo;t share a side, up, down, left or right. Red and violet are neighbors too, since the wheel wraps around. Diagonals are fine.</p>
+    <p>House rule: cats that sit next to each other on the wheel are territorial. They won&rsquo;t share a side, up, down, left or right. White and red are neighbors too, since the wheel wraps around. Diagonals are fine.</p>
     <p>The usual sudoku rules still apply. Fill a box correctly and its cats curl up for a nap.</p>
     <button class="btn primary" id="catRulesBtn">Got it</button>
   </div>
@@ -1008,7 +1033,7 @@ var m=document.querySelector('meta[name="theme-color"]');if(m)m.setAttribute('co
 'use strict';
 window.__sudokuBoot=true;
 var bm=document.getElementById('bootMsg');if(bm)bm.style.display='none';
-var vt=document.getElementById('verTag');if(vt)vt.textContent='v1.3.1';
+var vt=document.getElementById('verTag');if(vt)vt.textContent='v1.4.0';
 
 function $(s){return document.querySelector(s);}
 function cap(s){return s.charAt(0).toUpperCase()+s.slice(1);}
@@ -1302,7 +1327,8 @@ function render(){
       }
     }else if(sv&&v===sv&&!fogged)cls+=' peer';
     if(lastCls[i]!==cls){el.className=el.classList.contains('ring')?cls+' ring':cls;lastCls[i]=cls;}
-    var key=v?(catMode?'c'+v+(napping?'z':''):(melMode?'m':'v')+v):(notes[i]?(catMode?'p':'n')+notes[i]:'');
+    var nh=(!v&&sv&&notes[i]&(1<<sv))?sv:0;
+    var key=v?(catMode?'c'+v+(napping?'z':''):(melMode?'m':'v')+v):(notes[i]?(catMode?'p':'n')+notes[i]+'h'+nh:'');
     if(fogged&&puzzle[i])key='F'; /* fog hides the givens it covers */
     if(revMode&&!v)key='r'+solution[i]; /* Reverse shows removed numbers faded */
     if(lastKey[i]!==key){
@@ -1313,11 +1339,11 @@ function render(){
       else if(v&&melMode)el.innerHTML=v+'<span class="nn">'+MEL_NAME[v]+'</span>';
       else if(v)el.textContent=v;
       else if(notes[i]&&catMode){
-        var ph='';for(var pd=1;pd<=9;pd++)ph+='<span>'+(notes[i]&(1<<pd)?pawSvg(pd):'')+'</span>';
+        var ph='';for(var pd=1;pd<=9;pd++)ph+='<span'+(pd===nh?' class="on"':'')+'>'+(notes[i]&(1<<pd)?pawSvg(pd):'')+'</span>';
         el.innerHTML='<div class="paws">'+ph+'</div>';
       }
       else if(notes[i]){
-        var h='';for(var d=1;d<=9;d++)h+='<span>'+(notes[i]&(1<<d)?d:'')+'</span>';
+        var h='';for(var d=1;d<=9;d++)h+='<span'+(d===nh?' class="on"':'')+'>'+(notes[i]&(1<<d)?d:'')+'</span>';
         el.innerHTML='<div class="notes-grid">'+h+'</div>';
       }else el.textContent='';
     }
@@ -1710,9 +1736,9 @@ function updateStat3(){
 }
 /* ===================== Cat Cafe mode ===================== */
 function catSvg(v,napping){
-  return '<svg class="cat" viewBox="0 0 24 24" style="color:var(--cat'+v+')" aria-hidden="true"><use href="#'+(napping?'catNap':'catAwake')+'"/></svg><span class="cnum">'+v+'</span>';
+  return '<svg class="cat k'+v+'" viewBox="0 0 24 24" style="color:var(--kit'+v+')" aria-hidden="true"><use href="#'+(napping?'catNap':'catAwake')+'"/></svg><span class="cnum">'+v+'</span>';
 }
-function pawSvg(v){return '<svg viewBox="0 0 24 24" style="color:var(--cat'+v+')" aria-hidden="true"><use href="#paw"/></svg>';}
+function pawSvg(v){return '<svg class="k'+v+'" viewBox="2.6 3 18.8 18" style="color:var(--kit'+v+')" aria-hidden="true"><use href="#paw"/></svg>';}
 function napMask(){ /* a box naps once all nine of its cats are seated correctly */
   var m=0;
   for(var b=0;b<9;b++){
@@ -1723,7 +1749,7 @@ function napMask(){ /* a box naps once all nine of its cats are seated correctly
   return m;
 }
 function paintPad(){
-  for(var d=1;d<=9;d++)padBtns[d].innerHTML=catMode?'<svg class="cat" viewBox="0 0 24 24" style="color:var(--cat'+d+')" aria-hidden="true"><use href="#catAwake"/></svg><span class="pnum">'+d+'</span>':(melMode?d+'<span class="pnum">'+MEL_NAME[d]+'</span>':String(d));
+  for(var d=1;d<=9;d++)padBtns[d].innerHTML=catMode?'<svg class="cat k'+d+'" viewBox="0 0 24 24" style="color:var(--kit'+d+')" aria-hidden="true"><use href="#catAwake"/></svg><span class="pnum">'+d+'</span>':(melMode?d+'<span class="pnum">'+MEL_NAME[d]+'</span>':String(d));
 }
 function buildWheel(){ /* the nine cats in a ring, so the wrap from 9 back to 1 is visible */
   var w=$('#catWheel'),h='';
@@ -2457,6 +2483,23 @@ $('#newGameBtn').addEventListener('click',function(){
 });
 $('#againBtn').addEventListener('click',newGame);
 $('#closeEndBtn').addEventListener('click',function(){$('#endOverlay').classList.add('hidden');});
+
+/* All Notes: every empty cell gets the numbers that could still go there (wrong entries are ignored) */
+function allNotes(){
+  if(finished||revMode)return;
+  var g=grid.slice(),k,fogOn=dgMode&&dg&&dg.mods&&dg.mods.fog;
+  for(k in wrongSet)g[k]=0;
+  var m=new Masks(g),n=0,changed=false,next=notes.slice();
+  for(var i=0;i<81;i++){
+    if(grid[i]||(fogOn&&!dg.lit[i]))continue;
+    var c=m.cand(i);if(next[i]!==c){next[i]=c;changed=true;}n++;
+  }
+  if(!n)return;
+  if(!changed){toast('Notes are already full',0);return;}
+  snapshot();notes=next;sfx.note();render();
+  toast('Notes filled in',0);
+}
+$('#allNotesBtn').addEventListener('click',allNotes);
 $('#resumeBtn').addEventListener('click',function(){setPaused(false);});
 $('#timeStat').addEventListener('click',function(){if(finished||(dgMode&&dg&&dg.phase!=='play'))return;setPaused(true);});
 $('#timeStat').addEventListener('keydown',function(e){if(e.key==='Enter'||e.key===' '){e.preventDefault();this.click();}});
