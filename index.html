@@ -750,7 +750,7 @@ var m=document.querySelector('meta[name="theme-color"]');if(m)m.setAttribute('co
 
 <div class="app">
   <header>
-    <h1>SUDOKU<span id="verTag" class="ver">v1.4.1</span></h1>
+    <h1>SUDOKU<span id="verTag" class="ver">v1.4.2</span></h1>
     <div class="hdr-btns">
       <button id="themeBtn" class="icon-btn" title="Toggle light/dark">
         <svg class="sun" viewBox="0 0 24 24" width="24" height="24" fill="none" aria-hidden="true">
@@ -1033,7 +1033,7 @@ var m=document.querySelector('meta[name="theme-color"]');if(m)m.setAttribute('co
 'use strict';
 window.__sudokuBoot=true;
 var bm=document.getElementById('bootMsg');if(bm)bm.style.display='none';
-var vt=document.getElementById('verTag');if(vt)vt.textContent='v1.4.1';
+var vt=document.getElementById('verTag');if(vt)vt.textContent='v1.4.2';
 
 function $(s){return document.querySelector(s);}
 function cap(s){return s.charAt(0).toUpperCase()+s.slice(1);}
@@ -1410,6 +1410,21 @@ function fitBoard(){
 }
 var fitTm=null;
 window.addEventListener('resize',function(){clearTimeout(fitTm);fitTm=setTimeout(fitBoard,60);});
+/* Android/iPhone can report a short screen while the app is still opening, and may not send a resize
+   once it settles. Refit on every sign the screen changed, and keep a light watch: if the board was
+   shrunk but there is now spare room, or the page overflows, fit again. */
+function refitSoon(ms){clearTimeout(fitTm);fitTm=setTimeout(fitBoard,ms||60);}
+window.addEventListener('load',function(){refitSoon(30);setTimeout(fitBoard,400);setTimeout(fitBoard,1200);});
+window.addEventListener('pageshow',function(){refitSoon(60);});
+window.addEventListener('orientationchange',function(){refitSoon(250);});
+document.addEventListener('visibilitychange',function(){if(!document.hidden)refitSoon(120);});
+if(window.visualViewport)window.visualViewport.addEventListener('resize',function(){refitSoon(80);});
+setInterval(function(){
+  if(document.hidden)return;
+  var over=document.documentElement.scrollHeight-window.innerHeight,app=document.querySelector('.app');
+  var spare=app?window.innerHeight-app.getBoundingClientRect().bottom:0;
+  if((boardFitEl.style.width&&spare>40)||over>1)fitBoard();
+},1500);
 /* themed fonts change line heights once they load: refit then */
 if(document.fonts){try{document.fonts.addEventListener('loadingdone',function(){clearTimeout(fitTm);fitTm=setTimeout(fitBoard,30);});document.fonts.ready.then(function(){fitBoard();});}catch(e){}}
 function doAutoComplete(){
